@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>BYD 比亚迪工程研究院 | 海鸥雨刮器平面四杆机构研发互动实训</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --byd-red: #C5001A;
+      --byd-red-light: #FFF1F2;
+      --byd-blue: #0066CC;
+      --byd-ocean: #0284C7;
+      --byd-dark: #0F172A;
+      --byd-silver: #F1F5F9;
+      --byd-border: #CBD5E1;
+    }
+
+    body {
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Inter", sans-serif;
+      background: linear-gradient(135deg, #F8FAFC 0%, #EEF2F6 50%, #E2E8F0 100%);
+      color: #0F172A;
+      font-size: 20px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    .font-mono-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 比亚迪简明科技卡片风格 */
+    .byd-card {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #CBD5E1;
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.07), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+      border-radius: 20px;
+    }
+
+    .byd-story-box {
+      background: #FFFFFF;
+      border: 2px solid #E2E8F0;
+      border-top: 6px solid var(--byd-red);
+      box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.10);
+      border-radius: 24px;
+    }
+
+    /* 发光高亮主按钮 */
+    @keyframes pulse-glow-red {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(197, 0, 26, 0.55), 0 10px 25px -4px rgba(197, 0, 26, 0.4);
+        transform: translateY(0);
+      }
+      50% {
+        box-shadow: 0 0 0 10px rgba(197, 0, 26, 0), 0 14px 30px -4px rgba(197, 0, 26, 0.55);
+        transform: translateY(-2px);
+      }
+    }
+
+    @keyframes pulse-glow-blue {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.55), 0 10px 25px -4px rgba(2, 132, 199, 0.4);
+        transform: translateY(0);
+      }
+      50% {
+        box-shadow: 0 0 0 10px rgba(2, 132, 199, 0), 0 14px 30px -4px rgba(2, 132, 199, 0.55);
+        transform: translateY(-2px);
+      }
+    }
+
+    .btn-highlight-red {
+      background: linear-gradient(135deg, #D7001D 0%, #A80016 100%);
+      color: #FFFFFF;
+      animation: pulse-glow-red 2s infinite;
+      transition: all 0.2s ease;
+    }
+    .btn-highlight-red:hover {
+      background: linear-gradient(135deg, #E60020 0%, #B80018 100%);
+      transform: scale(1.02);
+    }
+
+    .btn-highlight-blue {
+      background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+      color: #FFFFFF;
+      animation: pulse-glow-blue 2s infinite;
+      transition: all 0.2s ease;
+    }
+    .btn-highlight-blue:hover {
+      background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+      transform: scale(1.02);
+    }
+
+    /* 定制大号滑块 */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 10px;
+      border-radius: 999px;
+      background: #E2E8F0;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--byd-red);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 8px rgba(197, 0, 26, 0.45);
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    /* 打字机光标 */
+    .typing-cursor::after {
+      content: "▋";
+      color: var(--byd-red);
+      animation: blink 0.8s infinite;
+      margin-left: 4px;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ================= 顶部比亚迪企业风格全局导航栏 (固定在所有 Page 顶部) ================= -->
+  <header class="bg-white/95 backdrop-blur-md border-b-2 border-slate-200 sticky top-0 z-40 px-4 lg:px-8 py-3 shadow-sm">
+    <div class="max-w-[1560px] mx-auto flex flex-wrap items-center justify-between gap-3">
+
+      <!-- 左侧：BYD 企业标识 + 课程系统名称 -->
+      <div class="flex items-center gap-4">
+        <!-- 比亚迪风格椭圆矢量徽标 -->
+        <div class="flex items-center gap-3">
+          <svg class="w-28 h-10 shrink-0" viewBox="0 0 180 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="4" width="176" height="52" rx="26" fill="#C5001A"/>
+            <rect x="6" y="8" width="168" height="44" rx="22" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.35"/>
+            <!-- BYD 舒展科技字体矢量路径感设计 -->
+            <text x="90" y="39" text-anchor="middle" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="28" letter-spacing="5">BYD</text>
+          </svg>
+          <div class="border-l-2 border-slate-300 pl-3">
+            <div class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              比亚迪工程研究院 · 海鸥雨刮器四杆机构实训室
+            </div>
+            <div class="text-xs sm:text-sm font-medium text-slate-500 tracking-wider">
+              BUILD YOUR DREAMS ｜ 平面四杆机构（曲柄·连杆·摇杆·机架）全流程研发挑战
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 中部：7 个 Page 任意跳转导航条 -->
+      <nav aria-label="页面导航" class="flex items-center flex-wrap gap-1.5 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+        <button data-nav-page="1" class="nav-page-btn px-3 py-1.5 rounded-xl text-sm sm:text-base font-bold transition-all bg-[#C5001A] text-white shadow-sm">
+          P1 故事导入
+        </button>
+        <button data-nav-page="2" class="nav-page-btn px-3 py-1.5 rounded-xl text-sm sm:text-base font-bold transition-all text-slate-600 hover:bg-white">
+          P2 单刷设计
+        </button>
+        <button data-nav-page="3" class="nav-page-btn px-3 py-1.5 rounded-xl text-sm sm:text-base font-bold transition-all text-slate-600 hover:bg-white">
+          P3 样机立项
+        </button>
+        <button data-nav-page="4" class="nav-page-btn px-3 py-1.5 rounded-xl text-sm sm:text-base font-bold transition-all text-slate-600 hover:bg-white">
+          P4 筷子教程
+        </button>
+        <button data-nav-page="5" class="nav-page-btn px-3 py-1.5 rounded-xl text-sm sm:text-base font-bold transition-all text-slate-600 hover:bg-white">
+          P5 市场反转
+        </button>
+        <button data-nav-page="6" class="nav-page-btn px-3 py-1.5 rounded-xl text-sm sm:text-base font-bold transition-all text-slate-600 hover:bg-white">
+          P6 双刷改回
+        </button>
+        <button data-nav-page="7" class="nav-page-btn px-3 py-1.5 rounded-xl text-sm sm:text-base font-bold transition-all text-slate-600 hover:bg-white">
+          P7 荣耀结局
+        </button>
+      </nav>
+
+      <!-- 右侧：本页重置 & 全局完全重置按钮 -->
+      <div class="flex items-center gap-2">
+        <button id="btnResetCurrentPage" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm sm:text-base font-bold border border-slate-300 transition flex items-center gap-1.5" title="重置当前所在页面的进度与参数">
+          <span>↺</span> <span>重置本页</span>
+        </button>
+        <button id="btnResetAllPages" class="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-[#C5001A] text-sm sm:text-base font-bold border border-rose-200 transition flex items-center gap-1.5" title="完全重置全部7个页面并回到Page 1开头">
+          <span>🔄</span> <span>全部重置</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= 主视图容器 (容纳 Page 1 ~ Page 7) ================= -->
+  <main class="flex-1 max-w-[1560px] w-full mx-auto px-4 sm:px-8 py-6 flex flex-col justify-center">
+
+    <!-- =========================================================================
+         PAGE 1: 故事导入（新车海鸥雨刮设计难题 -> 工程师灵光一闪 -> 进入实验室）
+         ========================================================================= -->
+    <section id="page-1" class="page-view w-full max-w-4xl mx-auto">
+      <div class="byd-story-box p-6 sm:p-10 space-y-6">
+        <!-- 顶部章节标签 -->
+        <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="px-3.5 py-1 rounded-full bg-[#C5001A] text-white text-base font-bold tracking-wide">PAGE 01 · 研发故事导入</span>
+            <span class="text-lg font-bold text-slate-500">深圳 · 比亚迪海洋网工程研究院</span>
+          </div>
+          <button id="btnSkipP1" class="text-base font-semibold text-sky-700 hover:underline">⏩ 立即显示本段全文</button>
+        </div>
+
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-snug">
+          代号“海鸥”：纯电小车的雨刮器布置困局
+        </h1>
+
+        <!-- 第一段自动播放文本框 -->
+        <div id="p1TextBox1" class="text-[22px] sm:text-[24px] text-slate-800 leading-relaxed space-y-4 min-h-[180px] bg-slate-50 p-6 rounded-2xl border border-slate-200"></div>
+
+        <!-- 阶段1加亮按钮：“作为工程师的你们，需要想办法解决这个难题。” -->
+        <div id="p1BtnWrap1" class="hidden pt-2 flex justify-center">
+          <button id="btnP1Solve" class="btn-highlight-red px-8 py-4 rounded-2xl text-[22px] sm:text-[24px] font-extrabold tracking-wide flex items-center gap-3 cursor-pointer">
+            <span>💡</span>
+            <span>作为工程师的你们，需要想办法解决这个难题。</span>
+          </button>
+        </div>
+
+        <!-- 第二段自动播放文本框（点击上方按钮后出现） -->
+        <div id="p1TextBox2" class="hidden text-[22px] sm:text-[24px] text-slate-800 leading-relaxed space-y-4 bg-sky-50/70 p-6 rounded-2xl border-2 border-sky-200"></div>
+
+        <!-- 阶段2按钮：“进入实验室” -->
+        <div id="p1BtnWrap2" class="hidden pt-3 flex justify-center">
+          <button id="btnP1ToPage2" class="btn-highlight-blue px-10 py-4 rounded-2xl text-[24px] font-extrabold tracking-wide flex items-center gap-3 cursor-pointer">
+            <span>🔬</span>
+            <span>进入实验室</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PAGE 2: 海鸥 1.0 单雨刮四杆机构模拟实验室
+         ========================================================================= -->
+    <section id="page-2" class="page-view hidden w-full">
+      <!-- 顶部任务横幅 -->
+      <div class="byd-card p-4 sm:p-5 mb-5 border-l-8 border-l-[#C5001A] flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span class="px-3 py-0.5 rounded-full bg-[#C5001A] text-white text-base font-bold">PAGE 02 · 第一次研发设计</span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">海鸥 1.0 “大摆角单雨刮”平面四杆机构参数寻优</h2>
+          </div>
+          <p class="text-[19px] text-slate-700 mt-1">
+            <strong>研发目标：</strong>仅调节下方<strong>曲柄 a、连杆 b、摇杆 c、机架 d</strong> 四根杆的长度，使电机曲柄能 <strong>360° 整周旋转不卡死</strong>，且单雨刮摆角 <strong>ψ 达到 88°~112°</strong>、最小传动角 <strong>γ_min ≥ 40°</strong>！
+          </p>
+        </div>
+        <!-- 达成目标后高亮显现的“设计完成”按钮 -->
+        <div class="flex items-center gap-3">
+          <button id="btnP2QuickDemo" class="px-4 py-2.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 text-base font-bold border border-amber-300 transition">
+            ✨ 填入参考达标值
+          </button>
+          <button id="btnP2Finish" class="hidden btn-highlight-red px-7 py-3.5 rounded-2xl text-[22px] font-extrabold flex items-center gap-2 cursor-pointer">
+            <span>✅ 设计完成</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 主体双栏：左侧仿真画布 (7列) + 右侧四杆长度调节与指标面板 (5列) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <!-- 左侧：1.0 单雨刮仿真画布 -->
+        <div class="lg:col-span-7 byd-card p-4 flex flex-col gap-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 px-1">
+            <div class="flex items-center gap-3">
+              <span class="w-3.5 h-3.5 rounded-full bg-[#C5001A]"></span>
+              <span class="text-xl font-extrabold text-slate-900">海鸥 1.0 单雨刮前风挡与四杆运动台架</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="btnP2Manual" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-base font-bold border border-slate-300">
+                ✋ 切换手摇/自动旋转
+              </button>
+            </div>
+          </div>
+
+          <div class="w-full aspect-[16/10] bg-slate-900 rounded-2xl overflow-hidden relative border-2 border-slate-300">
+            <canvas id="canvasP2" class="w-full h-full block"></canvas>
+            <!-- 浮动死点堵转警告 -->
+            <div id="p2StallAlert" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 w-[92%] bg-red-600/95 text-white px-4 py-2.5 rounded-xl shadow-lg text-lg font-bold text-center">
+              ⚠️ 电机曲柄卡死堵转！当前杆长不满足格拉霍夫准则（需 S+L ≤ P+Q 且曲柄 a 为最短杆）
+            </div>
+          </div>
+
+          <div class="bg-slate-50 rounded-xl p-3 border border-slate-200 text-[18px] text-slate-700 flex flex-wrap items-center justify-between gap-2">
+            <span>💡 <strong>操作说明：</strong>拖动右侧四根杆长滑块，或在画布下方直接用鼠标拖动<strong>蓝色主动曲柄 a</strong>。</span>
+            <span class="font-mono-num text-base font-bold text-sky-800">纸板模型换算比例：20 mm = 模型杆件 1.0 cm</span>
+          </div>
+        </div>
+
+        <!-- 右侧：四杆长度调节滑块 + 目标达成诊断面板 -->
+        <div class="lg:col-span-5 flex flex-col gap-4">
+
+          <!-- 面板1：唯一允许学生调节的四个核心参数（曲柄a、连杆b、摇杆c、机架d） -->
+          <div class="byd-card p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+              <h3 class="text-xl font-extrabold text-slate-900">🔧 平面四杆机构长度设定 (学生调节区)</h3>
+              <span class="text-sm font-bold px-2.5 py-1 rounded-lg bg-red-50 text-[#C5001A] border border-red-200">核心知识点</span>
+            </div>
+
+            <!-- 1. 曲柄 a -->
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <div class="flex justify-between items-baseline mb-1">
+                <label for="p2SliderA" class="text-[20px] font-bold text-slate-900 flex items-center gap-2">
+                  <span class="w-3.5 h-3.5 rounded bg-sky-500 inline-block"></span>
+                  1. 曲柄长度 a <span class="text-base font-normal text-slate-500">(电机驱动·须最短)</span>
+                </label>
+                <div class="text-right">
+                  <span id="p2ValA" class="text-[22px] font-extrabold font-mono-num text-sky-700">92 mm</span>
+                  <span id="p2ChopA" class="ml-1.5 text-base font-mono-num px-2 py-0.5 rounded bg-sky-100 text-sky-900 font-bold">杆 4.6cm</span>
+                </div>
+              </div>
+              <input id="p2SliderA" type="range" min="30" max="110" step="1" value="92" class="w-full my-1.5" />
+              <div class="text-[16px] text-slate-600">
+                📌 <strong>设定规律：</strong>曲柄 a 必须是最短杆！a 调大可增大摆角 ψ，但过大必导致卡死（建议 <strong>58~66 mm</strong>）。
+              </div>
+            </div>
+
+            <!-- 2. 连杆 b -->
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <div class="flex justify-between items-baseline mb-1">
+                <label for="p2SliderB" class="text-[20px] font-bold text-slate-900 flex items-center gap-2">
+                  <span class="w-3.5 h-3.5 rounded bg-amber-500 inline-block"></span>
+                  2. 连杆长度 b <span class="text-base font-normal text-slate-500">(中间传力杆)</span>
+                </label>
+                <div class="text-right">
+                  <span id="p2ValB" class="text-[22px] font-extrabold font-mono-num text-amber-700">142 mm</span>
+                  <span id="p2ChopB" class="ml-1.5 text-base font-mono-num px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold">杆 7.1cm</span>
+                </div>
+              </div>
+              <input id="p2SliderB" type="range" min="90" max="230" step="1" value="142" class="w-full my-1.5" />
+              <div class="text-[16px] text-slate-600">
+                📌 <strong>设定规律：</strong>把动力从曲柄传给摇杆。与机架 d 配合越均衡，最小传动角 γ_min 越大（建议 <strong>170~190 mm</strong>）。
+              </div>
+            </div>
+
+            <!-- 3. 摇杆 c -->
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <div class="flex justify-between items-baseline mb-1">
+                <label for="p2SliderC" class="text-[20px] font-bold text-slate-900 flex items-center gap-2">
+                  <span class="w-3.5 h-3.5 rounded bg-emerald-500 inline-block"></span>
+                  3. 摇杆长度 c <span class="text-base font-normal text-slate-500">(连接雨刮输出轴)</span>
+                </label>
+                <div class="text-right">
+                  <span id="p2ValC" class="text-[22px] font-extrabold font-mono-num text-emerald-700">82 mm</span>
+                  <span id="p2ChopC" class="ml-1.5 text-base font-mono-num px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 font-bold">杆 4.1cm</span>
+                </div>
+              </div>
+              <input id="p2SliderC" type="range" min="50" max="135" step="1" value="82" class="w-full my-1.5" />
+              <div class="text-[16px] text-slate-600">
+                📌 <strong>设定规律：</strong>c 越短，雨刮摆角 ψ 越被放大（ψ ≈ 2·arcsin(a/c)），但必须大于曲柄 a（建议 <strong>80~92 mm</strong>）。
+              </div>
+            </div>
+
+            <!-- 4. 机架 d -->
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <div class="flex justify-between items-baseline mb-1">
+                <label for="p2SliderD" class="text-[20px] font-bold text-slate-900 flex items-center gap-2">
+                  <span class="w-3.5 h-3.5 rounded bg-slate-600 inline-block"></span>
+                  4. 机架长度 d <span class="text-base font-normal text-slate-500">(两固定轴间距 O₂O₄)</span>
+                </label>
+                <div class="text-right">
+                  <span id="p2ValD" class="text-[22px] font-extrabold font-mono-num text-slate-800">180 mm</span>
+                  <span id="p2ChopD" class="ml-1.5 text-base font-mono-num px-2 py-0.5 rounded bg-slate-200 text-slate-900 font-bold">距 9.0cm</span>
+                </div>
+              </div>
+              <input id="p2SliderD" type="range" min="100" max="230" step="1" value="180" class="w-full my-1.5" />
+              <div class="text-[16px] text-slate-600">
+                📌 <strong>设定规律：</strong>电机转轴与雨刮转轴的安装跨距，需满足 b²+c²≈d² 以获得最佳传力角（建议 <strong>182~195 mm</strong>）。
+              </div>
+            </div>
+          </div>
+
+          <!-- 面板2：只读目标展示与运动学考核指标 -->
+          <div class="byd-card p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-extrabold text-slate-900">🎯 1.0 单雨刮设计指标实时考核 (展示区)</h3>
+              <span id="p2StatusBadge" class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-base font-bold">待调参达标</span>
+            </div>
+
+            <!-- 2x2 只读指标网格 -->
+            <div class="grid grid-cols-2 gap-2.5 text-base">
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="text-slate-500 font-medium">格拉霍夫判别 (S+L ≤ P+Q)</div>
+                <div id="p2StatGrashof" class="text-lg font-extrabold font-mono-num text-red-600 mt-0.5">272 &gt; 224 (卡死)</div>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="text-slate-500 font-medium">单雨刮摆角 ψ (目标 88°~112°)</div>
+                <div id="p2StatPsi" class="text-lg font-extrabold font-mono-num text-slate-800 mt-0.5">--</div>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="text-slate-500 font-medium">最小传动角 γ_min (目标 ≥40°)</div>
+                <div id="p2StatGamma" class="text-lg font-extrabold font-mono-num text-slate-800 mt-0.5">--</div>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="text-slate-500 font-medium">极位夹角 θ / 速比系数 K</div>
+                <div id="p2StatQuickReturn" class="text-lg font-extrabold font-mono-num text-slate-800 mt-0.5">--</div>
+              </div>
+            </div>
+
+            <!-- 任务核对清单 -->
+            <ul id="p2Checklist" class="space-y-1.5 text-[18px] pt-1"></ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PAGE 3: 文本故事（电脑设计完成 -> 需制作实物模型说服总工 -> 决定用筷子纸板制作）
+         ========================================================================= -->
+    <section id="page-3" class="page-view hidden w-full max-w-4xl mx-auto">
+      <div class="byd-story-box p-6 sm:p-10 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="px-3.5 py-1 rounded-full bg-[#C5001A] text-white text-base font-bold tracking-wide">PAGE 03 · 样机验证立项</span>
+            <span class="text-lg font-bold text-slate-500">向总工程师汇报前的紧急准备</span>
+          </div>
+          <button id="btnSkipP3" class="text-base font-semibold text-sky-700 hover:underline">⏩ 立即显示全文</button>
+        </div>
+
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          光有电脑仿真还不够，我们需要一台实物模型！
+        </h1>
+
+        <!-- 自动带入学生在 Page 2 锁定的四杆参数卡片 -->
+        <div class="bg-slate-100 rounded-2xl p-4 border border-slate-300 flex flex-wrap items-center justify-between gap-3">
+          <span class="text-[20px] font-bold text-slate-800">📐 你们刚刚锁定的 1.0 单雨刮四杆参数：</span>
+          <span id="p3SavedParamsBadge" class="font-mono-num text-[20px] font-extrabold text-[#C5001A]">
+            a=62mm(3.1cm) · b=178mm(8.9cm) · c=86mm(4.3cm) · d=188mm(9.4cm)
+          </span>
+        </div>
+
+        <!-- 自动滚动播放故事框 -->
+        <div id="p3TextBox" class="text-[22px] sm:text-[24px] text-slate-800 leading-relaxed space-y-4 min-h-[220px] bg-slate-50 p-6 rounded-2xl border border-slate-200"></div>
+
+        <!-- 末尾出现按钮：“开始制作” -->
+        <div id="p3BtnWrap" class="hidden pt-4 flex justify-center">
+          <button id="btnP3ToPage4" class="btn-highlight-red px-10 py-4 rounded-2xl text-[24px] font-extrabold tracking-wide flex items-center gap-3 cursor-pointer">
+            <span>🛠️</span>
+            <span>开始制作</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PAGE 4: 动手制作教程（用硬纸板剪杆件、竹筷做铰接销，完成四杆雨刮模型 -> “去汇报吧”）
+         ========================================================================= -->
+    <section id="page-4" class="page-view hidden w-full max-w-6xl mx-auto">
+      <div class="byd-card p-6 sm:p-8 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b-2 border-slate-200 pb-4">
+          <div>
+            <span class="px-3.5 py-1 rounded-full bg-[#C5001A] text-white text-base font-bold">PAGE 04 · 工程样机手作工坊</span>
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-2">
+              用硬纸板剪出杆件、竹筷做铰接销，打造 1:20 比亚迪海鸥四杆雨刮模型
+            </h1>
+          </div>
+          <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl px-4 py-2.5 text-right">
+            <div class="text-base font-bold text-amber-900">📏 你们小组的 1:20 模型杆件尺寸清单</div>
+            <div id="p4ParamGuide" class="font-mono-num text-[20px] font-extrabold text-[#C5001A]">
+              曲柄a: 3.1cm | 连杆b: 8.9cm | 摇杆c: 4.3cm | 机架d: 9.4cm
+            </div>
+          </div>
+        </div>
+
+        <!-- 直观矢量装配蓝图 -->
+        <div class="bg-slate-900 rounded-2xl p-4 border-2 border-slate-300">
+          <svg viewBox="0 0 900 250" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+            <!-- 纸板外框 -->
+            <rect x="20" y="12" width="860" height="226" rx="14" fill="#1E293B" stroke="#64748B" stroke-width="2"/>
+            <!-- 纸板上的梯形挡风玻璃 -->
+            <polygon points="160,26 740,26 790,148 110,148" fill="#0F172A" stroke="#38BDF8" stroke-width="2"/>
+            <!-- 单雨刮画出的扇形 -->
+            <path d="M 520,158 L 365,42 A 185,185 0 0,1 675,42 Z" fill="rgba(56,189,248,0.18)" stroke="#38BDF8" stroke-width="2" stroke-dasharray="6,4"/>
+            <!-- 主驾视野框 -->
+            <rect x="210" y="42" width="230" height="90" rx="6" fill="rgba(245,158,11,0.10)" stroke="#FBBF24" stroke-width="2" stroke-dasharray="5,3"/>
+            <text x="222" y="66" fill="#FDE047" font-size="16" font-weight="bold">硬纸板：主驾视野框 (画20个方格)</text>
+
+            <!-- 机架 d 标注 -->
+            <line x1="330" y1="196" x2="520" y2="158" stroke="#94A3B8" stroke-width="2.5" stroke-dasharray="6,4"/>
+            <text x="425" y="218" text-anchor="middle" fill="#E2E8F0" font-size="16" font-weight="bold">④ 机架 d：在纸板上量出 9.4 cm 扎两颗图钉 (O₂ 与 O₄)</text>
+
+            <!-- 曲柄 a 硬纸板杆件 -->
+            <line x1="330" y1="196" x2="365" y2="164" stroke="#38BDF8" stroke-width="8" stroke-linecap="round"/>
+            <text x="235" y="180" fill="#7DD3FC" font-size="16" font-weight="bold">① 曲柄杆件 a (3.1cm)</text>
+
+            <!-- 连杆 b 硬纸板杆件 -->
+            <line x1="365" y1="164" x2="495" y2="195" stroke="#F59E0B" stroke-width="7" stroke-linecap="round"/>
+            <text x="425" y="155" text-anchor="middle" fill="#FCD34D" font-size="16" font-weight="bold">② 连杆杆件 b (8.9cm)</text>
+
+            <!-- 摇杆 c 硬纸板杆件 + 延伸雨刮臂 -->
+            <line x1="495" y1="195" x2="520" y2="158" stroke="#10B981" stroke-width="8" stroke-linecap="round"/>
+            <line x1="520" y1="158" x2="435" y2="48" stroke="#34D399" stroke-width="6" stroke-linecap="round"/>
+            <text x="645" y="182" fill="#6EE7B7" font-size="16" font-weight="bold">③ 摇杆杆件 c (4.3cm) + 延伸雨刮臂</text>
+
+            <!-- 四个铰链点 -->
+            <circle cx="330" cy="196" r="7" fill="#EF4444" stroke="#FFF" stroke-width="2"/>
+            <circle cx="520" cy="158" r="7" fill="#EF4444" stroke="#FFF" stroke-width="2"/>
+            <circle cx="365" cy="164" r="6" fill="#FFF" stroke="#0284C7" stroke-width="2"/>
+            <circle cx="495" cy="195" r="6" fill="#FFF" stroke="#D97706" stroke-width="2"/>
+          </svg>
+        </div>
+
+        <!-- 四步制作教程卡片 (大字号 >= 20px) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- 第一步 -->
+          <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 space-y-2">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-[#C5001A] text-white text-xl font-extrabold flex items-center justify-center shrink-0">1</span>
+              <h3 class="text-[22px] font-extrabold text-slate-900">第一步：绘制硬纸板“风挡与机架 d”</h3>
+            </div>
+            <p class="text-[20px] text-slate-700 leading-relaxed">
+              取一块 A4 大小的硬纸板，上半部分画出比亚迪海鸥的梯形前挡风玻璃与主驾视野框；下半部分作为前舱机架，用直尺量出<strong>机架长度 d（约 9.4 cm）</strong>，扎出电机轴 <strong>O₂</strong> 与雨刮轴 <strong>O₄</strong> 两个固定孔位。
+            </p>
+          </div>
+
+          <!-- 第二步 -->
+          <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 space-y-2">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-[#C5001A] text-white text-xl font-extrabold flex items-center justify-center shrink-0">2</span>
+              <h3 class="text-[22px] font-extrabold text-slate-900">第二步：按尺寸清单剪出三根模型杆件</h3>
+            </div>
+            <p class="text-[20px] text-slate-700 leading-relaxed">
+              在硬纸板上按尺寸清单描线，剪出三根杆件：① <strong>曲柄杆件 a</strong>（孔距 <strong>3.1 cm</strong>，最短杆）；② <strong>连杆杆件 b</strong>（孔距 <strong>8.9 cm</strong>）；③ <strong>摇杆杆件 c</strong>（下端孔距 <strong>4.3 cm</strong>，上端再延伸 12 cm 作为雨刮臂，并绑上水彩笔或湿海绵条）。用锥子在每根杆件两端扎出铰接小孔。
+            </p>
+          </div>
+
+          <!-- 第三步 -->
+          <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 space-y-2">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-[#C5001A] text-white text-xl font-extrabold flex items-center justify-center shrink-0">3</span>
+              <h3 class="text-[22px] font-extrabold text-slate-900">第三步：竹筷作铰接销，把杆件串起来</h3>
+            </div>
+            <p class="text-[20px] text-slate-700 leading-relaxed">
+              把一次性竹筷剪成若干 <strong>1.5 cm 长的小段</strong>当作铰接销：<strong>曲柄杆件 a</strong> 一端穿在纸板 O₂ 孔、<strong>摇杆杆件 c</strong> 穿在 O₄ 孔，再用<strong>连杆杆件 b</strong> 把它们的另一端首尾相连。核对最短杆 a + 最长杆 d 是否小于等于 b + c；背面垫橡皮或胶带防扎手。
+            </p>
+          </div>
+
+          <!-- 第四步 -->
+          <div class="bg-slate-50 p-5 rounded-2xl border-2 border-slate-200 space-y-2">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-[#C5001A] text-white text-xl font-extrabold flex items-center justify-center shrink-0">4</span>
+              <h3 class="text-[22px] font-extrabold text-slate-900">第四步：手摇 360° 试刮并准备汇报</h3>
+            </div>
+            <p class="text-[20px] text-slate-700 leading-relaxed">
+              捏住<strong>曲柄杆件 a</strong> 端头的竹筷销连续旋转 360°，观察绑在雨刮臂顶端的水彩笔在纸板风挡上画出的扇形轨迹！确认曲柄能够顺畅整周旋转、各杆件铰接销没有被撬松后，即可带着你们的实物模型去向总工程师汇报！
+            </p>
+          </div>
+        </div>
+
+        <!-- 底部按钮：“去汇报吧” -->
+        <div class="pt-2 flex justify-center">
+          <button id="btnP4ToPage5" class="btn-highlight-red px-12 py-4 rounded-2xl text-[24px] font-extrabold tracking-wide flex items-center gap-3 cursor-pointer">
+            <span>📢</span>
+            <span>去汇报吧</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PAGE 5: 市场反转故事（总工认可发售大卖 -> 延迟2秒出现“然而” -> 单刷问题暴露 -> 开始讨论 -> 回去工作）
+         ========================================================================= -->
+    <section id="page-5" class="page-view hidden w-full max-w-4xl mx-auto">
+      <div class="byd-story-box p-6 sm:p-10 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="px-3.5 py-1 rounded-full bg-[#C5001A] text-white text-base font-bold tracking-wide">PAGE 05 · 量产发售与突发危机</span>
+            <span class="text-lg font-bold text-slate-500">从销量狂欢到暴雨夜的紧急召回会</span>
+          </div>
+          <button id="btnSkipP5" class="text-base font-semibold text-sky-700 hover:underline">⏩ 立即显示当前段全文</button>
+        </div>
+
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          新车上市大卖！但暴雨夜传来了紧急反馈……
+        </h1>
+
+        <!-- 第1段：汇报成功与海鸥热销 -->
+        <div id="p5TextBox1" class="text-[22px] sm:text-[24px] text-slate-800 leading-relaxed space-y-4 bg-emerald-50/70 p-6 rounded-2xl border border-emerald-200"></div>
+
+        <!-- 延迟2秒后突然出现的“然而”转折框 -->
+        <div id="p5HoweverWrap" class="hidden space-y-5">
+          <div class="flex items-center gap-3 bg-red-600 text-white px-6 py-3 rounded-2xl shadow-lg">
+            <span class="text-3xl">⚡</span>
+            <span class="text-[26px] sm:text-[30px] font-extrabold tracking-widest">然而……</span>
+          </div>
+
+          <div id="p5TextBox2" class="text-[22px] sm:text-[24px] text-slate-800 leading-relaxed space-y-4 bg-rose-50/90 p-6 rounded-2xl border-2 border-rose-300"></div>
+        </div>
+
+        <!-- “开始讨论”按钮 -->
+        <div id="p5BtnDiscussWrap" class="hidden pt-2 flex justify-center">
+          <button id="btnP5Discuss" class="btn-highlight-red px-9 py-4 rounded-2xl text-[24px] font-extrabold tracking-wide flex items-center gap-3 cursor-pointer">
+            <span>🗣️</span>
+            <span>开始讨论</span>
+          </button>
+        </div>
+
+        <!-- 点击“开始讨论”后继续播放的改造方案文本 -->
+        <div id="p5TextBox3" class="hidden text-[22px] sm:text-[24px] text-slate-800 leading-relaxed space-y-4 bg-sky-50/80 p-6 rounded-2xl border-2 border-sky-300"></div>
+
+        <!-- 末尾出现按钮：“回去工作” -->
+        <div id="p5BtnWorkWrap" class="hidden pt-3 flex justify-center">
+          <button id="btnP5ToPage6" class="btn-highlight-blue px-10 py-4 rounded-2xl text-[24px] font-extrabold tracking-wide flex items-center gap-3 cursor-pointer">
+            <span>🔧</span>
+            <span>回去工作</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PAGE 6: 第二次改回 · 2026款海鸥同步双雨刮四杆机构实验室
+         ========================================================================= -->
+    <section id="page-6" class="page-view hidden w-full">
+      <!-- 顶部任务横幅 -->
+      <div class="byd-card p-4 sm:p-5 mb-5 border-l-8 border-l-sky-600 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span class="px-3 py-0.5 rounded-full bg-sky-600 text-white text-base font-bold">PAGE 06 · 第二次改回升级</span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">2026款海鸥“主副同步双雨刮”四杆参数重构与暴雨攻坚</h2>
+          </div>
+          <p class="text-[19px] text-slate-700 mt-1">
+            <strong>改回双雨刮任务：</strong>已加装主驾左雨刮与平行同步横拉杆！但初始四杆参数摆幅仅 46° 且传力角偏小。请重新调节<strong>曲柄 a、连杆 b、摇杆 c、机架 d</strong>，使双刮片同步摆角 <strong>ψ 达 86°~106°</strong>、最小传动角 <strong>γ_min ≥ 42°</strong>，让暴雨下主驾视野清晰度<strong>突破 85%（达 88% 以上）</strong>！
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="btnP6QuickDemo" class="px-4 py-2.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-900 text-base font-bold border border-sky-300 transition">
+            ✨ 填入2026款量产黄金参数
+          </button>
+          <button id="btnP6Finish" class="hidden btn-highlight-red px-8 py-3.5 rounded-2xl text-[22px] font-extrabold flex items-center gap-2 cursor-pointer">
+            <span>🏆 进入结局</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 主体双栏 -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        <!-- 左侧：2.0 同步双雨刮仿真画布 -->
+        <div class="lg:col-span-7 byd-card p-4 flex flex-col gap-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 px-1">
+            <div class="flex items-center gap-3">
+              <span class="w-3.5 h-3.5 rounded-full bg-sky-600"></span>
+              <span class="text-xl font-extrabold text-slate-900">2026款海鸥 2.0 同步双雨刮 + 平行四杆联动台架 (暴雨工况)</span>
+            </div>
+            <button id="btnP6Manual" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-base font-bold border border-slate-300">
+              ✋ 切换手摇/自动旋转
+            </button>
+          </div>
+
+          <div class="w-full aspect-[16/10] bg-slate-900 rounded-2xl overflow-hidden relative border-2 border-slate-300">
+            <canvas id="canvasP6" class="w-full h-full block"></canvas>
+            <div id="p6StallAlert" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 w-[92%] bg-red-600/95 text-white px-4 py-2.5 rounded-xl shadow-lg text-lg font-bold text-center">
+              ⚠️ 电机曲柄卡死堵转！请调小曲柄 a 使其成为最短杆，并满足格拉霍夫条件 S+L ≤ P+Q
+            </div>
+          </div>
+
+          <div class="bg-sky-50 rounded-xl p-3 border border-sky-200 text-[18px] text-slate-800">
+            🛠️ <strong>纸板模型同步改造提示：</strong>在你们的硬纸板左侧 <strong>O₅</strong> 处扎出第2个转轴孔并装上左侧雨刮臂杆件，再用一根<strong>长度等于两刮臂铰接孔间距的同步横拉杆杆件</strong>将左右摇臂连接成平行四边形，按右侧调好的厘米数固定四杆！
+          </div>
+        </div>
+
+        <!-- 右侧：四杆长度调节滑块 + 2.0 双雨刮目标面板 -->
+        <div class="lg:col-span-5 flex flex-col gap-4">
+
+          <!-- 四杆长度调节区 -->
+          <div class="byd-card p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2.5">
+              <h3 class="text-xl font-extrabold text-slate-900">🔧 双雨刮四杆长度精调 (学生调节区)</h3>
+              <span class="text-sm font-bold px-2.5 py-1 rounded-lg bg-sky-50 text-sky-700 border border-sky-200">曲柄·连杆·摇杆·机架</span>
+            </div>
+
+            <!-- 1. 曲柄 a -->
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <div class="flex justify-between items-baseline mb-1">
+                <label for="p6SliderA" class="text-[20px] font-bold text-slate-900 flex items-center gap-2">
+                  <span class="w-3.5 h-3.5 rounded bg-sky-500 inline-block"></span>
+                  1. 曲柄长度 a <span class="text-base font-normal text-slate-500">(主动杆·当前偏短导致摆角不够)</span>
+                </label>
+                <div class="text-right">
+                  <span id="p6ValA" class="text-[22px] font-extrabold font-mono-num text-sky-700">38 mm</span>
+                  <span id="p6ChopA" class="ml-1.5 text-base font-mono-num px-2 py-0.5 rounded bg-sky-100 text-sky-900 font-bold">杆 1.9cm</span>
+                </div>
+              </div>
+              <input id="p6SliderA" type="range" min="30" max="110" step="1" value="38" class="w-full my-1.5" />
+              <div class="text-[16px] text-slate-600">
+                📌 <strong>调参任务：</strong>当前 a=38mm 太短，双刮片只扫过 46°！请增大曲柄 a 至 <strong>58~64 mm（模型杆件 3.0~3.2 cm）</strong>。
+              </div>
+            </div>
+
+            <!-- 2. 连杆 b -->
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <div class="flex justify-between items-baseline mb-1">
+                <label for="p6SliderB" class="text-[20px] font-bold text-slate-900 flex items-center gap-2">
+                  <span class="w-3.5 h-3.5 rounded bg-amber-500 inline-block"></span>
+                  2. 连杆长度 b <span class="text-base font-normal text-slate-500">(主传力杆)</span>
+                </label>
+                <div class="text-right">
+                  <span id="p6ValB" class="text-[22px] font-extrabold font-mono-num text-amber-700">145 mm</span>
+                  <span id="p6ChopB" class="ml-1.5 text-base font-mono-num px-2 py-0.5 rounded bg-amber-100 text-amber-900 font-bold">杆 7.3cm</span>
+                </div>
+              </div>
+              <input id="p6SliderB" type="range" min="90" max="230" step="1" value="145" class="w-full my-1.5" />
+              <div class="text-[16px] text-slate-600">
+                📌 <strong>调参任务：</strong>双雨刮负载翻倍，需将连杆 b 调长至 <strong>174~186 mm（模型杆件 8.7~9.3 cm）</strong> 以提升传动角。
+              </div>
+            </div>
+
+            <!-- 3. 摇杆 c -->
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <div class="flex justify-between items-baseline mb-1">
+                <label for="p6SliderC" class="text-[20px] font-bold text-slate-900 flex items-center gap-2">
+                  <span class="w-3.5 h-3.5 rounded bg-emerald-500 inline-block"></span>
+                  3. 摇杆长度 c <span class="text-base font-normal text-slate-500">(双刮臂同步摇杆)</span>
+                </label>
+                <div class="text-right">
+                  <span id="p6ValC" class="text-[22px] font-extrabold font-mono-num text-emerald-700">98 mm</span>
+                  <span id="p6ChopC" class="ml-1.5 text-base font-mono-num px-2 py-0.5 rounded bg-emerald-100 text-emerald-900 font-bold">杆 4.9cm</span>
+                </div>
+              </div>
+              <input id="p6SliderC" type="range" min="50" max="135" step="1" value="98" class="w-full my-1.5" />
+              <div class="text-[16px] text-slate-600">
+                📌 <strong>调参任务：</strong>适当调小摇杆 c 至 <strong>82~90 mm（模型杆件 4.1~4.5 cm）</strong>，使双刮片摆角精准落在 86°~106°。
+              </div>
+            </div>
+
+            <!-- 4. 机架 d -->
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+              <div class="flex justify-between items-baseline mb-1">
+                <label for="p6SliderD" class="text-[20px] font-bold text-slate-900 flex items-center gap-2">
+                  <span class="w-3.5 h-3.5 rounded bg-slate-600 inline-block"></span>
+                  4. 机架长度 d <span class="text-base font-normal text-slate-500">(电机轴与右摇臂轴跨距)</span>
+                </label>
+                <div class="text-right">
+                  <span id="p6ValD" class="text-[22px] font-extrabold font-mono-num text-slate-800">160 mm</span>
+                  <span id="p6ChopD" class="ml-1.5 text-base font-mono-num px-2 py-0.5 rounded bg-slate-200 text-slate-900 font-bold">距 8.0cm</span>
+                </div>
+              </div>
+              <input id="p6SliderD" type="range" min="100" max="230" step="1" value="160" class="w-full my-1.5" />
+              <div class="text-[16px] text-slate-600">
+                📌 <strong>调参任务：</strong>调整机架跨距 d 至 <strong>184~195 mm（纸板图钉距 9.2~9.8 cm）</strong>，确保 γ_min ≥ 42°。
+              </div>
+            </div>
+          </div>
+
+          <!-- 面板2：2026款双雨刮量产验收指标 (只读展示) -->
+          <div class="byd-card p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xl font-extrabold text-slate-900">🎯 2026款同步双雨刮验收指标 (展示区)</h3>
+              <span id="p6StatusBadge" class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-base font-bold">待调参突破85%</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 text-base">
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="text-slate-500 font-medium">主驾视野清晰度 (目标 ≥88%)</div>
+                <div id="p6StatClarity" class="text-xl font-extrabold font-mono-num text-amber-600 mt-0.5">58%</div>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="text-slate-500 font-medium">双刷同步摆角 ψ (目标 86°~106°)</div>
+                <div id="p6StatPsi" class="text-xl font-extrabold font-mono-num text-slate-800 mt-0.5">46.2°</div>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="text-slate-500 font-medium">最小传动角 γ_min (目标 ≥42°)</div>
+                <div id="p6StatGamma" class="text-xl font-extrabold font-mono-num text-slate-800 mt-0.5">34.5°</div>
+              </div>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="text-slate-500 font-medium">格拉霍夫判别 (S+L ≤ P+Q)</div>
+                <div id="p6StatGrashof" class="text-lg font-extrabold font-mono-num text-emerald-600 mt-0.5">198 ≤ 243</div>
+              </div>
+            </div>
+
+            <ul id="p6Checklist" class="space-y-1.5 text-[18px] pt-1"></ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         PAGE 7: 圆满结局（2026款比亚迪海鸥全球热销 + 研发成果总结与恭喜通关）
+         ========================================================================= -->
+    <section id="page-7" class="page-view hidden w-full max-w-4xl mx-auto">
+      <div class="byd-story-box p-6 sm:p-10 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+          <div class="flex items-center gap-3">
+            <span class="px-3.5 py-1 rounded-full bg-[#C5001A] text-white text-base font-bold tracking-wide">PAGE 07 · 荣耀结局</span>
+            <span class="text-lg font-bold text-slate-500">比亚迪海鸥 2026 款全球上市庆功会</span>
+          </div>
+          <button id="btnSkipP7" class="text-base font-semibold text-sky-700 hover:underline">⏩ 立即显示全文</button>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-[#C5001A] text-white flex items-center justify-center text-3xl font-extrabold shadow-lg shrink-0">
+            🏆
+          </div>
+          <div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              破茧成蝶：2026款海鸥荣耀发售，恭喜各位工程师！
+            </h1>
+            <p class="text-lg text-slate-500 font-medium">从“第一次单雨刮探索”到“第二次双雨刮改回”——这就是真实的机械工程迭代！</p>
+          </div>
+        </div>
+
+        <!-- 自动播放结局故事框 -->
+        <div id="p7TextBox" class="text-[22px] sm:text-[24px] text-slate-800 leading-relaxed space-y-4 min-h-[220px] bg-slate-50 p-6 rounded-2xl border border-slate-200"></div>
+
+        <!-- 研发成果荣誉证书卡片（播放完成后显现） -->
+        <div id="p7CertCard" class="hidden bg-gradient-to-br from-rose-50 via-white to-sky-50 border-2 border-[#C5001A]/40 rounded-2xl p-6 space-y-4 shadow-md">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+            <div class="text-xl font-extrabold text-[#C5001A]">🎖️ 比亚迪工程研究院 · 平面四杆机构研发结业认证</div>
+            <span class="px-3 py-1 rounded-full bg-emerald-600 text-white text-base font-bold">主驾视野清晰度 ≥ 92% 认证通过</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[19px]">
+            <div class="bg-white p-4 rounded-xl border border-slate-200">
+              <div class="font-bold text-slate-500 text-base">第一次改造（Page 2 · 1.0单雨刮样机参数）</div>
+              <div id="p7SummaryP2" class="font-mono-num font-extrabold text-slate-800 mt-1">
+                a=62mm · b=178mm · c=86mm · d=188mm
+              </div>
+              <div class="text-base text-slate-600 mt-1">验证结论：掌握曲柄摇杆条件，发现单圆弧左上角盲区极限(72%)。</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200">
+              <div class="font-bold text-sky-700 text-base">第二次改回（Page 6 · 2026款同步双雨刮量产参数）</div>
+              <div id="p7SummaryP6" class="font-mono-num font-extrabold text-[#C5001A] mt-1">
+                a=62mm · b=180mm · c=86mm · d=190mm
+              </div>
+              <div class="text-base text-slate-600 mt-1">验证结论：曲柄摇杆+平行双摇杆联动，暴雨清晰度突破 92%！</div>
+            </div>
+          </div>
+
+          <div class="pt-2 flex flex-wrap justify-center gap-4">
+            <button id="btnP7Restart" class="btn-highlight-red px-9 py-3.5 rounded-2xl text-[22px] font-extrabold flex items-center gap-2 cursor-pointer">
+              <span>🔄</span>
+              <span>再玩一次（从 Page 1 重新开始）</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= 核心控制脚本 ================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* =====================================================================
+         1. 全局状态与故事文本配置
+         ===================================================================== */
+      const STORY_TEXTS = {
+        p1Part1: [
+          '2023年，深圳比亚迪海洋网工程研究院灯火通明。一款定位“7万级精品纯电代步车”的全新战略车型——比亚迪“海鸥（Seagull）”正在紧锣密鼓地研发中。',
+          '为了给车内乘员腾出最宽敞的乘坐空间，海鸥采用了“四轮四角、极短前悬”的车身设计。然而，当研发推进到前风挡雨刮器总成时，总布置团队却遇到了一个棘手的工程难题：',
+          '海鸥的前舱极其紧凑，集雨板下方已经塞满了电驱控制器、热管理模块和空调进风箱！如果照搬传统家用车的“两根雨刮器+长横拉杆”结构，不仅前舱空间放不下，还会增加风阻、噪音和整车制造成本。设计师们迫切希望打破常规，用最精简的结构解决前挡风玻璃的刮水问题！'
+        ],
+        p1Part2: [
+          '就在评审会陷入僵局时，团队里的一位青年机械工程师灵光一闪，在白板上画出了一个大胆的方案——“1.0 复合大摆角单雨刮”！',
+          '“我们能不能只用一根加长雨刮器？在集雨板下布置一套经典的【平面四杆机构（曲柄摇杆机构）】，让雨刮电机带动最短的【曲柄 a】连续单向旋转，通过【连杆 b】推动【摇杆 c】带着单根雨刮臂左右大角度往复摆动！”',
+          '这个点子让大家眼前一亮！但新的问题接踵而至：曲柄 a、连杆 b、摇杆 c、机架 d 这四根杆的长度数值到底该如何设定，才能让电机不卡死、连杆不别劲，并且扫过足够大的风挡面积？你们决定立即进入实验室展开参数计算与模拟测试！'
+        ],
+        p3Story: [
+          '太棒了！经过你们在实验室里的精密调参，海鸥 1.0 单雨刮的平面四杆机构已经在电脑里顺畅运转起来，满足了格拉霍夫曲柄摇杆条件与传动角要求！',
+          '但是，汽车工程讲究“眼见为实”。要想在下午的立项评审会上说服严谨的比亚迪总工程师批准这套单雨刮方案，光靠电脑屏幕上的动画远远不够——你们必须拿出一套能真实转动、能画出刮水扇面的【物理实体模型】来展示效果！',
+          '距离向总工程师汇报只剩下最后 15 分钟，去试制车间加工金属冲压件根本来不及了。紧急关头，你们灵机一动，目光落在了桌上的【硬纸板、一次性竹筷、图钉和荧光水彩笔】上——决定就地取材，用硬纸板剪出四根模型杆件、拿竹筷当铰接销，按 1:20 的比例亲手把这套四杆雨刮器做出来！'
+        ],
+        p5Part1: [
+          '评审会上，总工程师亲自转动了你们用硬纸板和竹筷制作的四杆雨刮样机。看到曲柄竹筷转满 360°、雨刮臂平稳往复摆动，总工程师连连称赞：“结构紧凑、传力巧妙，同意按此方案量产！”',
+          '很快，搭载着这套 1.0 单雨刮系统的初代比亚迪海鸥正式上市发行！凭借亲民的价格与越级的空间表现，海鸥一经推出便引爆市场，迅速登顶纯电轿车销量榜首，累计销量突破数十万辆，整个研发团队都沉浸在喜悦之中！'
+        ],
+        p5Part2: [
+          '随着第一批海鸥车主迎来南方特大暴雨季，售后服务部收到了大量真实车主的反馈：这种“单雨刮器”在倾盆大雨中暴露出了先天的物理局限！',
+          '原因在哪里？原来，一根雨刮臂绕着单个固定轴摆动，扫出的轨迹永远是一个【圆弧扇形】，而汽车前挡风玻璃却是【矩形】的！这导致主驾驶位左上角始终留有一块擦不到的三角视线盲区，主驾核心视野清晰度最高只能停留在 72% 左右，怎么调都达不到 85% 的安全理想值！',
+          '用户的安全高于一切！总工程师连夜紧急把你们召集回工程院会议室，下达死命令：必须在即将推出的【2026款海鸥】改款中彻底消灭左上角视野盲区！'
+        ],
+        p5Part3: [
+          '大家围着当初的纸板筷子模型展开了热烈讨论，很快找准了问题症结与改造方案：',
+          '“单根摇杆只有一个圆心，无论怎么改四杆长度，单个圆弧都填不满矩形的左上角！要想让清晰度突破 85%，我们必须从单雨刮改回【主副驾同步双雨刮】——在原有曲柄摇杆机构（曲柄a、连杆b、摇杆c、机架d）的基础上，在纸板左侧新增一个主驾转轴，用一根平行同步拉杆带动左右两根雨刮器同步摆动！”',
+          '同时，因为双雨刮负载翻倍且两块扇形需要精准交叠，四杆机构的【曲柄 a、连杆 b、摇杆 c、机架 d】长度数值必须全部重新计算设定！方案敲定，大家立刻拿起计算器回到实验室投入工作！'
+        ],
+        p7Story: [
+          '历经从“1.0 初代单雨刮”到“2.0 同步双雨刮”的两次重大工程攻关，你们调校出的全新平面四杆雨刮系统终于完美通过了特大暴雨台架试验！',
+          '2026款比亚迪海鸥带着你们升级的“四档同步双雨刮系统”正式焕新发售！在无数个风雨交加的夜晚，电机曲柄平稳旋转，主副两根无骨雨刮臂在平行四杆机构的驱动下默契同步摆动，将主驾左上角的盲区彻底扫净，视野清晰度稳定保持在 92% 以上！',
+          '车主们纷纷在论坛晒图好评：“26款海鸥把单雨刮升级成双雨刮太良心了，雨夜开车视野一片透亮！”海鸥不仅蝉联国内纯电销冠，更扬帆出海畅销全球。恭喜各位优秀的机械工程师圆满完成本次比亚迪研发实训任务！'
+        ]
+      };
+
+      const appState = {
+        currentPage: 1,
+        typingTimer: null,
+        howeverTimer: null,
+
+        // Page 2 (1.0 单雨刮实验室) 状态
+        p2: {
+          init: { a: 92, b: 142, c: 82, d: 180 },
+          std:  { a: 62, b: 178, c: 86, d: 188 },
+          a: 92, b: 142, c: 82, d: 180,
+          theta2: 0.7,
+          prevPhi: null,
+          manual: false,
+          dragging: false,
+          stalled: false,
+          clarity: 48,
+          raindrops: [],
+          wetTrails: []
+        },
+
+        // Page 6 (2.0 同步双雨刮实验室) 状态
+        p6: {
+          init: { a: 38, b: 145, c: 98, d: 160 },
+          std:  { a: 62, b: 180, c: 86, d: 190 },
+          a: 38, b: 145, c: 98, d: 160,
+          theta2: 0.7,
+          prevPhi: null,
+          manual: false,
+          dragging: false,
+          stalled: false,
+          clarity: 58,
+          raindrops: [],
+          wetTrails: []
+        }
+      };
+
+      /* =====================================================================
+         2. 平面四杆机构核心运动学求解器 (格拉霍夫准则 + 摆角 + 传动角)
+         ===================================================================== */
+      function clamp(v, min, max) {
+        return Math.max(min, Math.min(max, v));
+      }
+      function radToDeg(r) {
+        return (r * 180) / Math.PI;
+      }
+      function degToRad(d) {
+        return (d * Math.PI) / 180;
+      }
+
+      function analyzeFourBar(a, b, c, d) {
+        const arr = [
+          { k: 'a', v: a },
+          { k: 'b', v: b },
+          { k: 'c', v: c },
+          { k: 'd', v: d }
+        ].sort((x, y) => x.v - y.v);
+
+        const S = arr[0].v;
+        const P = arr[1].v;
+        const Q = arr[2].v;
+        const L = arr[3].v;
+        const shortestKey = arr[0].k;
+
+        const sumSL = S + L;
+        const sumPQ = P + Q;
+        const canAssemble = L < S + P + Q;
+        const isGrashof = canAssemble && sumSL <= sumPQ;
+        const isCrankRocker = isGrashof && shortestKey === 'a';
+        const crankCanFullRotate = isGrashof && (shortestKey === 'a' || shortestKey === 'd');
+
+        let psi = null;
+        let gammaMin = null;
+        let thetaDeg = null;
+        let K = null;
+        let extremePhi1 = null;
+        let extremePhi2 = null;
+
+        if (isCrankRocker) {
+          const cosG1 = clamp((b * b + c * c - (d - a) * (d - a)) / (2 * b * c), -1, 1);
+          const cosG2 = clamp((b * b + c * c - (d + a) * (d + a)) / (2 * b * c), -1, 1);
+          const g1 = radToDeg(Math.acos(cosG1));
+          const g2 = radToDeg(Math.acos(cosG2));
+          gammaMin = Math.min(g1 > 90 ? 180 - g1 : g1, g2 > 90 ? 180 - g2 : g2);
+
+          const L1 = b + a;
+          const L2 = Math.abs(b - a);
+          const phi1 = Math.acos(clamp((d * d + c * c - L1 * L1) / (2 * d * c), -1, 1));
+          const phi2 = Math.acos(clamp((d * d + c * c - L2 * L2) / (2 * d * c), -1, 1));
+          extremePhi1 = Math.PI - phi1;
+          extremePhi2 = Math.PI - phi2;
+          psi = radToDeg(Math.abs(extremePhi2 - extremePhi1));
+
+          const alpha1 = Math.acos(clamp((d * d + L1 * L1 - c * c) / (2 * d * L1), -1, 1));
+          const alpha2 = Math.acos(clamp((d * d + L2 * L2 - c * c) / (2 * d * L2), -1, 1));
+          thetaDeg = radToDeg(Math.abs(alpha2 - alpha1));
+          K = (180 + thetaDeg) / Math.max(1, 180 - thetaDeg);
+        }
+
+        let cosMin = -1;
+        let cosMax = 1;
+        if (canAssemble && !crankCanFullRotate) {
+          const rMax = b + c;
+          const rMin = Math.abs(b - c);
+          cosMin = clamp((a * a + d * d - rMax * rMax) / (2 * a * d), -1, 1);
+          cosMax = clamp((a * a + d * d - rMin * rMin) / (2 * a * d), -1, 1);
+        }
+
+        return {
+          S, L, P, Q, sumSL, sumPQ, shortestKey,
+          canAssemble, isGrashof, isCrankRocker, crankCanFullRotate,
+          psi, gammaMin, thetaDeg, K, extremePhi1, extremePhi2,
+          cosMin, cosMax
+        };
+      }
+
+      function solvePosition(a, b, c, d, theta2) {
+        const O2 = { x: 0, y: 0 };
+        const O4 = { x: d, y: 0 };
+        const A = { x: a * Math.cos(theta2), y: a * Math.sin(theta2) };
+
+        const dx = O4.x - A.x;
+        const dy = O4.y - A.y;
+        const r = Math.hypot(dx, dy);
+
+        if (r < 1e-5 || r > b + c + 1e-4 || r < Math.abs(b - c) - 1e-4) {
+          return { valid: false, O2, O4, A, B: null, theta4: Math.PI * 0.6, gammaDeg: 0 };
+        }
+
+        const cosAlpha = clamp((r * r + b * b - c * c) / (2 * r * b), -1, 1);
+        const sinAlpha = Math.sqrt(Math.max(0, 1 - cosAlpha * cosAlpha));
+        const ux = dx / r;
+        const uy = dy / r;
+        const vx = -uy;
+        const vy = ux;
+
+        const B = {
+          x: A.x + b * (cosAlpha * ux + sinAlpha * vx),
+          y: A.y + b * (cosAlpha * uy + sinAlpha * vy)
+        };
+
+        const theta4 = Math.atan2(B.y - O4.y, B.x - O4.x);
+        const dot = (A.x - B.x) * (O4.x - B.x) + (A.y - B.y) * (O4.y - B.y);
+        let gammaDeg = radToDeg(Math.acos(clamp(dot / (b * c), -1, 1)));
+        if (gammaDeg > 90) gammaDeg = 180 - gammaDeg;
+
+        return { valid: true, O2, O4, A, B, theta4, gammaDeg };
+      }
+
+      /* =====================================================================
+         3. 自动播放打字机引擎 (用于 Page 1, Page 3, Page 5, Page 7)
+         ===================================================================== */
+      function clearTimers() {
+        if (appState.typingTimer) {
+          clearInterval(appState.typingTimer);
+          appState.typingTimer = null;
+        }
+        if (appState.howeverTimer) {
+          clearTimeout(appState.howeverTimer);
+          appState.howeverTimer = null;
+        }
+      }
+
+      function playParagraphs(containerEl, paragraphs, onComplete, speedMs = 22) {
+        clearTimers();
+        containerEl.innerHTML = '';
+        containerEl.classList.remove('hidden');
+
+        let pIdx = 0;
+        let charIdx = 0;
+        let currentP = document.createElement('p');
+        currentP.className = 'typing-cursor';
+        containerEl.appendChild(currentP);
+
+        appState.typingTimer = setInterval(() => {
+          if (pIdx >= paragraphs.length) {
+            clearTimers();
+            if (currentP) currentP.classList.remove('typing-cursor');
+            if (onComplete) onComplete();
+            return;
+          }
+          const text = paragraphs[pIdx];
+          if (charIdx < text.length) {
+            currentP.textContent += text[charIdx];
+            charIdx++;
+          } else {
+            currentP.classList.remove('typing-cursor');
+            pIdx++;
+            charIdx = 0;
+            if (pIdx < paragraphs.length) {
+              currentP = document.createElement('p');
+              currentP.className = 'typing-cursor';
+              containerEl.appendChild(currentP);
+            }
+          }
+        }, speedMs);
+      }
+
+      function instantFillParagraphs(containerEl, paragraphs, onComplete) {
+        clearTimers();
+        containerEl.innerHTML = paragraphs.map(t => `<p>${t}</p>`).join('');
+        containerEl.classList.remove('hidden');
+        if (onComplete) onComplete();
+      }
+
+      /* =====================================================================
+         4. 各 Page 初始化与重置逻辑
+         ===================================================================== */
+      let p1Phase = 1;
+      let p5Phase = 1;
+
+      function initPage1() {
+        p1Phase = 1;
+        const box1 = document.getElementById('p1TextBox1');
+        const box2 = document.getElementById('p1TextBox2');
+        const btn1 = document.getElementById('p1BtnWrap1');
+        const btn2 = document.getElementById('p1BtnWrap2');
+
+        box2.classList.add('hidden');
+        box2.innerHTML = '';
+        btn1.classList.add('hidden');
+        btn2.classList.add('hidden');
+
+        playParagraphs(box1, STORY_TEXTS.p1Part1, () => {
+          btn1.classList.remove('hidden');
+        });
+      }
+
+      function initPage2(resetParams = false) {
+        if (resetParams) {
+          Object.assign(appState.p2, appState.p2.init, {
+            theta2: 0.7,
+            manual: false,
+            stalled: false,
+            clarity: 48
+          });
+        }
+        syncLabSliders('p2');
+        requestAnimationFrame(() => {
+          resizeLabCanvas('canvasP2', 'p2');
+          updateLabUI('p2');
+        });
+      }
+
+      function initPage3() {
+        const s = appState.p2;
+        document.getElementById('p3SavedParamsBadge').textContent =
+          `a=${s.a}mm(${(s.a / 20).toFixed(1)}cm) · b=${s.b}mm(${(s.b / 20).toFixed(1)}cm) · c=${s.c}mm(${(s.c / 20).toFixed(1)}cm) · d=${s.d}mm(${(s.d / 20).toFixed(1)}cm)`;
+
+        const box = document.getElementById('p3TextBox');
+        const btn = document.getElementById('p3BtnWrap');
+        btn.classList.add('hidden');
+
+        playParagraphs(box, STORY_TEXTS.p3Story, () => {
+          btn.classList.remove('hidden');
+        });
+      }
+
+      function initPage4() {
+        const s = appState.p2;
+        document.getElementById('p4ParamGuide').textContent =
+          `曲柄a: ${(s.a / 20).toFixed(1)}cm | 连杆b: ${(s.b / 20).toFixed(1)}cm | 摇杆c: ${(s.c / 20).toFixed(1)}cm | 机架d: ${(s.d / 20).toFixed(1)}cm`;
+      }
+
+      function initPage5() {
+        p5Phase = 1;
+        const box1 = document.getElementById('p5TextBox1');
+        const howeverWrap = document.getElementById('p5HoweverWrap');
+        const box2 = document.getElementById('p5TextBox2');
+        const btnDiscuss = document.getElementById('p5BtnDiscussWrap');
+        const box3 = document.getElementById('p5TextBox3');
+        const btnWork = document.getElementById('p5BtnWorkWrap');
+
+        howeverWrap.classList.add('hidden');
+        box2.innerHTML = '';
+        btnDiscuss.classList.add('hidden');
+        box3.classList.add('hidden');
+        box3.innerHTML = '';
+        btnWork.classList.add('hidden');
+
+        playParagraphs(box1, STORY_TEXTS.p5Part1, () => {
+          // 延迟 2 秒后突然出现“然而……”
+          appState.howeverTimer = setTimeout(() => {
+            p5Phase = 2;
+            howeverWrap.classList.remove('hidden');
+            playParagraphs(box2, STORY_TEXTS.p5Part2, () => {
+              btnDiscuss.classList.remove('hidden');
+            });
+          }, 2000);
+        });
+      }
+
+      function initPage6(resetParams = false) {
+        if (resetParams) {
+          Object.assign(appState.p6, appState.p6.init, {
+            theta2: 0.7,
+            manual: false,
+            stalled: false,
+            clarity: 58
+          });
+        }
+        syncLabSliders('p6');
+        requestAnimationFrame(() => {
+          resizeLabCanvas('canvasP6', 'p6');
+          updateLabUI('p6');
+        });
+      }
+
+      function initPage7() {
+        const s2 = appState.p2;
+        const s6 = appState.p6;
+        document.getElementById('p7SummaryP2').textContent =
+          `a=${s2.a}mm(${(s2.a / 20).toFixed(1)}cm) · b=${s2.b}mm · c=${s2.c}mm · d=${s2.d}mm`;
+        document.getElementById('p7SummaryP6').textContent =
+          `a=${s6.a}mm(${(s6.a / 20).toFixed(1)}cm) · b=${s6.b}mm · c=${s6.c}mm · d=${s6.d}mm`;
+
+        const box = document.getElementById('p7TextBox');
+        const cert = document.getElementById('p7CertCard');
+        cert.classList.add('hidden');
+
+        playParagraphs(box, STORY_TEXTS.p7Story, () => {
+          cert.classList.remove('hidden');
+        });
+      }
+
+      function goToPage(pageNum, resetTarget = false) {
+        clearTimers();
+        appState.currentPage = pageNum;
+
+        document.querySelectorAll('.page-view').forEach((sec, idx) => {
+          sec.classList.toggle('hidden', idx + 1 !== pageNum);
+        });
+
+        document.querySelectorAll('.nav-page-btn').forEach(btn => {
+          const active = Number(btn.dataset.navPage) === pageNum;
+          btn.className = active
+            ? 'nav-page-btn px-3 py-1.5 rounded-xl text-sm sm:text-base font-bold transition-all bg-[#C5001A] text-white shadow-sm'
+            : 'nav-page-btn px-3 py-1.5 rounded-xl text-sm sm:text-base font-bold transition-all text-slate-600 hover:bg-white';
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        if (pageNum === 1) initPage1();
+        else if (pageNum === 2) initPage2(resetTarget);
+        else if (pageNum === 3) initPage3();
+        else if (pageNum === 4) initPage4();
+        else if (pageNum === 5) initPage5();
+        else if (pageNum === 6) initPage6(resetTarget);
+        else if (pageNum === 7) initPage7();
+      }
+
+      /* =====================================================================
+         5. Page 2 (单刷) 与 Page 6 (双刷) 仿真画布与四杆参数交互
+         ===================================================================== */
+      const labMetrics = {
+        p2: { w: 800, h: 500, dpr: 1, hoodY: 300, o2X: 250, o2Y: 400, pivotX: 450, pivotY: 400, o5X: 0, o5Y: 0, scale: 1, inR: 70, outR: 275, vb: { x: 140, y: 85, w: 250, h: 175 } },
+        p6: { w: 800, h: 500, dpr: 1, hoodY: 300, o2X: 250, o2Y: 400, pivotX: 480, pivotY: 400, o5X: 0, o5Y: 0, scale: 1, inR: 70, outR: 275, vb: { x: 140, y: 85, w: 250, h: 175 } }
+      };
+
+      function resizeLabCanvas(canvasId, key) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas || !canvas.parentElement) return;
+        const rect = canvas.parentElement.getBoundingClientRect();
+        if (rect.width < 20 || rect.height < 20) return;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = rect.width;
+        const h = rect.height;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const m = labMetrics[key];
+        const st = appState[key];
+        m.w = w;
+        m.h = h;
+        m.dpr = dpr;
+        m.hoodY = h * 0.60;
+        m.scale = Math.min(w / 680, h / 410) * (key === 'p6' ? 0.82 : 1);
+        m.pivotX = w * (key === 'p6' ? 0.60 : 0.56);
+        m.pivotY = m.hoodY + h * 0.20;
+        m.o2X = m.pivotX - st.d * m.scale;
+        m.o2Y = m.pivotY;
+        m.o5X = m.pivotX - w * 0.30;
+        m.o5Y = m.pivotY;
+        m.inR = h * 0.14;
+        m.outR = h * 0.55;
+        m.vb = { x: w * 0.17, y: h * 0.16, w: w * 0.32, h: h * 0.36 };
+      }
+
+      function syncLabSliders(key) {
+        const st = appState[key];
+        ['A', 'B', 'C', 'D'].forEach(letter => {
+          const prop = letter.toLowerCase();
+          const slider = document.getElementById(`${key}Slider${letter}`);
+          const valEl = document.getElementById(`${key}Val${letter}`);
+          const chopEl = document.getElementById(`${key}Chop${letter}`);
+          if (slider) slider.value = st[prop];
+          if (valEl) valEl.textContent = `${st[prop]} mm`;
+          if (chopEl) {
+            const prefix = prop === 'd' ? '距' : '杆';
+            chopEl.textContent = `${prefix} ${(st[prop] / 20).toFixed(1)}cm`;
+          }
+        });
+      }
+
+      function updateLabUI(key) {
+        const st = appState[key];
+        const kin = analyzeFourBar(st.a, st.b, st.c, st.d);
+        st.kin = kin;
+
+        const m = labMetrics[key];
+        m.o2X = m.pivotX - st.d * m.scale;
+
+        if (key === 'p2') {
+          // Page 2: 1.0 单雨刮指标与判定
+          const gEl = document.getElementById('p2StatGrashof');
+          const psiEl = document.getElementById('p2StatPsi');
+          const gamEl = document.getElementById('p2StatGamma');
+          const qrEl = document.getElementById('p2StatQuickReturn');
+
+          gEl.textContent = `${kin.sumSL} ${kin.sumSL <= kin.sumPQ ? '≤' : '>'} ${kin.sumPQ} (${kin.isCrankRocker ? '合格' : '异常'})`;
+          gEl.className = `text-lg font-extrabold font-mono-num mt-0.5 ${kin.isCrankRocker ? 'text-emerald-600' : 'text-red-600'}`;
+
+          psiEl.textContent = kin.psi !== null ? `${kin.psi.toFixed(1)}°` : '--';
+          psiEl.className = `text-lg font-extrabold font-mono-num mt-0.5 ${kin.psi >= 88 && kin.psi <= 112 ? 'text-emerald-600' : 'text-amber-600'}`;
+
+          gamEl.textContent = kin.gammaMin !== null ? `${kin.gammaMin.toFixed(1)}°` : '--';
+          gamEl.className = `text-lg font-extrabold font-mono-num mt-0.5 ${kin.gammaMin >= 40 ? 'text-emerald-600' : 'text-red-600'}`;
+
+          qrEl.textContent = kin.thetaDeg !== null ? `θ=${kin.thetaDeg.toFixed(1)}° / K=${kin.K.toFixed(2)}` : '--';
+
+          const checks = [
+            { text: `满足格拉霍夫曲柄摇杆条件 (S+L ≤ P+Q 且曲柄 a 最短)`, ok: kin.isCrankRocker },
+            { text: `单雨刮摆角 ψ 落在 88° ~ 112° 之间 (当前 ${kin.psi ? kin.psi.toFixed(1) + '°' : '--'})`, ok: kin.isCrankRocker && kin.psi >= 88 && kin.psi <= 112 },
+            { text: `最小传动角 γ_min ≥ 40° 传力顺畅 (当前 ${kin.gammaMin ? kin.gammaMin.toFixed(1) + '°' : '--'})`, ok: kin.isCrankRocker && kin.gammaMin >= 40 }
+          ];
+
+          document.getElementById('p2Checklist').innerHTML = checks.map(c => `
+            <li class="flex items-center gap-2 font-semibold ${c.ok ? 'text-emerald-700' : 'text-slate-600'}">
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${c.ok ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-600'}">${c.ok ? '✓' : '○'}</span>
+              <span>${c.text}</span>
+            </li>
+          `).join('');
+
+          const allOk = checks.every(c => c.ok);
+          const badge = document.getElementById('p2StatusBadge');
+          const finishBtn = document.getElementById('btnP2Finish');
+          if (allOk) {
+            badge.textContent = '🎉 1.0 单雨刮设计达标！';
+            badge.className = 'px-3 py-1 rounded-full bg-emerald-600 text-white text-base font-bold';
+            finishBtn.classList.remove('hidden');
+          } else {
+            badge.textContent = '待调参达标';
+            badge.className = 'px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-base font-bold';
+            finishBtn.classList.add('hidden');
+          }
+        } else if (key === 'p6') {
+          // Page 6: 2.0 同步双雨刮指标与判定
+          let targetClarity = 55;
+          if (kin.isCrankRocker && kin.psi !== null) {
+            if (kin.psi >= 86 && kin.psi <= 106 && kin.gammaMin >= 42) {
+              targetClarity = 93;
+            } else if (kin.psi >= 75) {
+              targetClarity = 82;
+            } else {
+              targetClarity = clamp(32 + kin.psi * 0.56, 45, 78);
+            }
+          }
+          st.clarity = targetClarity;
+
+          const clEl = document.getElementById('p6StatClarity');
+          const psiEl = document.getElementById('p6StatPsi');
+          const gamEl = document.getElementById('p6StatGamma');
+          const gEl = document.getElementById('p6StatGrashof');
+
+          clEl.textContent = `${Math.round(st.clarity)}%`;
+          clEl.className = `text-xl font-extrabold font-mono-num mt-0.5 ${st.clarity >= 88 ? 'text-emerald-600' : 'text-amber-600'}`;
+
+          psiEl.textContent = kin.psi !== null ? `${kin.psi.toFixed(1)}°` : '--';
+          psiEl.className = `text-xl font-extrabold font-mono-num mt-0.5 ${kin.psi >= 86 && kin.psi <= 106 ? 'text-emerald-600' : 'text-amber-600'}`;
+
+          gamEl.textContent = kin.gammaMin !== null ? `${kin.gammaMin.toFixed(1)}°` : '--';
+          gamEl.className = `text-xl font-extrabold font-mono-num mt-0.5 ${kin.gammaMin >= 42 ? 'text-emerald-600' : 'text-red-600'}`;
+
+          gEl.textContent = `${kin.sumSL} ${kin.sumSL <= kin.sumPQ ? '≤' : '>'} ${kin.sumPQ} (${kin.isCrankRocker ? '合格' : '异常'})`;
+          gEl.className = `text-lg font-extrabold font-mono-num mt-0.5 ${kin.isCrankRocker ? 'text-emerald-600' : 'text-red-600'}`;
+
+          const checks = [
+            { text: `满足格拉霍夫曲柄摇杆条件 (S+L ≤ P+Q 且曲柄 a 最短)`, ok: kin.isCrankRocker },
+            { text: `双雨刮同步摆角 ψ ∈ [86°, 106°] (当前 ${kin.psi ? kin.psi.toFixed(1) + '°' : '--'})`, ok: kin.isCrankRocker && kin.psi >= 86 && kin.psi <= 106 },
+            { text: `最小传动角 γ_min ≥ 42° 驱动双刷不别劲 (当前 ${kin.gammaMin ? kin.gammaMin.toFixed(1) + '°' : '--'})`, ok: kin.isCrankRocker && kin.gammaMin >= 42 },
+            { text: `暴雨下主驾视野清晰度突破 85% 达 88%+ (当前 ${Math.round(st.clarity)}%)`, ok: st.clarity >= 88 }
+          ];
+
+          document.getElementById('p6Checklist').innerHTML = checks.map(c => `
+            <li class="flex items-center gap-2 font-semibold ${c.ok ? 'text-emerald-700' : 'text-slate-600'}">
+              <span class="w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold ${c.ok ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-600'}">${c.ok ? '✓' : '○'}</span>
+              <span>${c.text}</span>
+            </li>
+          `).join('');
+
+          const allOk = checks.every(c => c.ok);
+          const badge = document.getElementById('p6StatusBadge');
+          const finishBtn = document.getElementById('btnP6Finish');
+          if (allOk) {
+            badge.textContent = '🏆 2.0 双雨刮完美达标！';
+            badge.className = 'px-3 py-1 rounded-full bg-emerald-600 text-white text-base font-bold';
+            finishBtn.classList.remove('hidden');
+          } else {
+            badge.textContent = '待调参突破85%';
+            badge.className = 'px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-base font-bold';
+            finishBtn.classList.add('hidden');
+          }
+        }
+      }
+
+      /* =====================================================================
+         6. 实验室画布帧渲染 (Page 2 单刷 & Page 6 双刷)
+         ===================================================================== */
+      function stepAndDrawLab(canvasId, key, dt) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const st = appState[key];
+        const m = labMetrics[key];
+        const kin = st.kin || analyzeFourBar(st.a, st.b, st.c, st.d);
+        const isDual = key === 'p6';
+
+        // 1) 推进曲柄角 θ2
+        const omega = st.manual ? 0 : 2.8;
+        let nextTheta = st.theta2 + omega * dt;
+        st.stalled = false;
+
+        if (!kin.canAssemble) {
+          st.stalled = true;
+        } else if (!kin.crankCanFullRotate) {
+          const cosN = Math.cos(nextTheta);
+          if (cosN < kin.cosMin + 0.002 || cosN > kin.cosMax - 0.002) {
+            const clampedCos = clamp(cosN, kin.cosMin + 0.003, kin.cosMax - 0.003);
+            nextTheta = (Math.sin(nextTheta) >= 0 ? 1 : -1) * Math.acos(clampedCos);
+            st.stalled = true;
+          }
+        }
+        st.theta2 = ((nextTheta % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+
+        const stallAlert = document.getElementById(`${key}StallAlert`);
+        if (stallAlert) stallAlert.classList.toggle('hidden', !st.stalled);
+
+        // 2) 解算四杆位置
+        const sol = solvePosition(st.a, st.b, st.c, st.d, st.theta2);
+        const wiperAngle = sol.valid ? sol.theta4 : Math.PI * 0.55;
+
+        m.o2X = m.pivotX - st.d * m.scale;
+
+        const toC = pt => ({ x: m.o2X + pt.x * m.scale, y: m.o2Y - pt.y * m.scale });
+        const pO2 = toC(sol.O2);
+        const pO4 = toC(sol.O4);
+        const pA = toC(sol.A);
+        const pB = sol.B ? toC(sol.B) : null;
+        const pO5 = isDual ? { x: m.o5X, y: m.o5Y } : null;
+        // 双雨刮：左侧摇臂铰点 B' 由 B 平移得到（保证平行四边形同步）
+        const pB2 = (isDual && pB && pO5)
+          ? { x: pB.x + (pO5.x - pO4.x), y: pB.y + (pO5.y - pO4.y) }
+          : null;
+
+        // 扇区极位角
+        let pMin = wiperAngle - degToRad(32);
+        let pMax = wiperAngle + degToRad(32);
+        if (kin.isCrankRocker && kin.extremePhi1 !== null) {
+          pMin = Math.min(kin.extremePhi1, kin.extremePhi2);
+          pMax = Math.max(kin.extremePhi1, kin.extremePhi2);
+        }
+
+        const pivots = isDual ? [pO5, pO4] : [pO4];
+
+        // 3) 清空画布并绘制风挡
+        ctx.clearRect(0, 0, m.w, m.h);
+
+        const topY = m.h * 0.05;
+        const botY = m.hoodY;
+        const poly = [
+          { x: m.w * 0.13, y: topY },
+          { x: m.w * 0.87, y: topY },
+          { x: m.w * 0.95, y: botY },
+          { x: m.w * 0.05, y: botY }
+        ];
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(poly[0].x, poly[0].y);
+        ctx.lineTo(poly[1].x, poly[1].y);
+        ctx.lineTo(poly[2].x, poly[2].y);
+        ctx.lineTo(poly[3].x, poly[3].y);
+        ctx.closePath();
+        ctx.fillStyle = '#0B192C';
+        ctx.fill();
+        ctx.clip();
+
+        // 刮刷扇区包络
+        pivots.forEach(pv => {
+          ctx.beginPath();
+          ctx.arc(pv.x, pv.y, m.outR, -pMax, -pMin);
+          ctx.arc(pv.x, pv.y, m.inR, -pMin, -pMax, true);
+          ctx.closePath();
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.16)';
+          ctx.fill();
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+          ctx.lineWidth = 1.8;
+          ctx.setLineDash([6, 4]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        });
+
+        // 主驾核心视野框
+        const vb = m.vb;
+        ctx.strokeStyle = isDual ? '#34D399' : '#FBBF24';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(vb.x, vb.y, vb.w, vb.h);
+        ctx.fillStyle = isDual ? '#6EE7B7' : '#FDE047';
+        ctx.font = 'bold 14px "PingFang SC", sans-serif';
+        ctx.fillText(
+          isDual
+            ? `主驾视野 A区 (2.0双雨刮清晰度: ${Math.round(st.clarity)}%)`
+            : `主驾视野 A区 (1.0单雨刮右置大扇区)`,
+          vb.x + 8,
+          vb.y + 20
+        );
+
+        // 雨滴动画与刮除
+        if (st.raindrops.length < (isDual ? 95 : 55)) {
+          st.raindrops.push({
+            x: m.w * (0.1 + Math.random() * 0.8),
+            y: topY + Math.random() * (botY - topY) * 0.8,
+            vy: 26 + Math.random() * 20
+          });
+        }
+        const deltaPhi = st.prevPhi !== null ? Math.abs(wiperAngle - st.prevPhi) : 0;
+        for (let i = st.raindrops.length - 1; i >= 0; i--) {
+          const drop = st.raindrops[i];
+          drop.y += drop.vy * dt;
+          if (drop.y > botY - 4) {
+            st.raindrops.splice(i, 1);
+            continue;
+          }
+          if (deltaPhi > 0.002 && !st.stalled) {
+            let wiped = false;
+            for (let p = 0; p < pivots.length; p++) {
+              const pv = pivots[p];
+              const dist = Math.hypot(drop.x - pv.x, pv.y - drop.y);
+              if (dist >= m.inR * 0.85 && dist <= m.outR * 1.05) {
+                const ang = Math.atan2(pv.y - drop.y, drop.x - pv.x);
+                if (ang >= Math.min(st.prevPhi, wiperAngle) - 0.08 && ang <= Math.max(st.prevPhi, wiperAngle) + 0.08) {
+                  wiped = true;
+                  break;
+                }
+              }
+            }
+            if (wiped) {
+              st.raindrops.splice(i, 1);
+              continue;
+            }
+          }
+          ctx.beginPath();
+          ctx.arc(drop.x, drop.y, 2.2, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(186, 230, 253, 0.75)';
+          ctx.fill();
+        }
+        st.prevPhi = wiperAngle;
+        ctx.restore();
+
+        // 挡风玻璃边框
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(poly[0].x, poly[0].y);
+        ctx.lineTo(poly[1].x, poly[1].y);
+        ctx.lineTo(poly[2].x, poly[2].y);
+        ctx.lineTo(poly[3].x, poly[3].y);
+        ctx.closePath();
+        ctx.stroke();
+
+        // 4) 下方前舱四杆机构区域
+        ctx.fillStyle = '#09111E';
+        ctx.fillRect(0, botY, m.w, m.h - botY);
+        ctx.strokeStyle = '#38BDF8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, botY);
+        ctx.lineTo(m.w, botY);
+        ctx.stroke();
+
+        // 机架 d
+        ctx.strokeStyle = '#94A3B8';
+        ctx.lineWidth = 2.2;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(pO2.x, pO2.y);
+        ctx.lineTo(pO4.x, pO4.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#CBD5E1';
+        ctx.font = 'bold 13px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`机架 d=${st.d}mm`, (pO2.x + pO4.x) / 2, pO2.y + 22);
+
+        // 曲柄圆轨迹
+        ctx.beginPath();
+        ctx.arc(pO2.x, pO2.y, st.a * m.scale, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // 曲柄 a
+        ctx.strokeStyle = '#38BDF8';
+        ctx.lineWidth = 6.5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(pO2.x, pO2.y);
+        ctx.lineTo(pA.x, pA.y);
+        ctx.stroke();
+
+        if (pB) {
+          // 连杆 b
+          ctx.strokeStyle = '#F59E0B';
+          ctx.lineWidth = 5.5;
+          ctx.beginPath();
+          ctx.moveTo(pA.x, pA.y);
+          ctx.lineTo(pB.x, pB.y);
+          ctx.stroke();
+
+          // 摇杆 c（右）
+          ctx.strokeStyle = '#10B981';
+          ctx.lineWidth = 6.5;
+          ctx.beginPath();
+          ctx.moveTo(pO4.x, pO4.y);
+          ctx.lineTo(pB.x, pB.y);
+          ctx.stroke();
+
+          ctx.fillStyle = '#FDE047';
+          ctx.font = 'bold 13px "JetBrains Mono", monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(`连杆 b=${st.b}`, (pA.x + pB.x) / 2, (pA.y + pB.y) / 2 - 10);
+          ctx.fillStyle = '#6EE7B7';
+          ctx.fillText(`摇杆 c=${st.c}`, (pO4.x + pB.x) / 2 + 46, (pO4.y + pB.y) / 2);
+
+          if (isDual && pB2 && pO5) {
+            // 摇杆 c（左）
+            ctx.strokeStyle = '#10B981';
+            ctx.lineWidth = 6.5;
+            ctx.beginPath();
+            ctx.moveTo(pO5.x, pO5.y);
+            ctx.lineTo(pB2.x, pB2.y);
+            ctx.stroke();
+
+            // 平行同步横拉杆：直接铰接在两个摇臂的 B 点上
+            ctx.strokeStyle = '#A855F7';
+            ctx.lineWidth = 3.5;
+            ctx.setLineDash([7, 4]);
+            ctx.beginPath();
+            ctx.moveTo(pB.x, pB.y);
+            ctx.lineTo(pB2.x, pB2.y);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.fillStyle = '#D8B4FE';
+            ctx.font = 'bold 13px "PingFang SC", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('2.0新增：主副驾平行同步横拉杆', (pB.x + pB2.x) / 2, Math.min(pB.y, pB2.y) - 10);
+          }
+        }
+
+        ctx.fillStyle = '#7DD3FC';
+        ctx.font = 'bold 13px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`曲柄 a=${st.a}`, (pO2.x + pA.x) / 2 - 30, (pO2.y + pA.y) / 2 - 8);
+
+        // 5) 雨刮臂：从摇杆与连杆的铰接点 B 处向外延伸
+        const drawWiperArm = (pivotPt, jointPt) => {
+          if (!jointPt) return;
+          const dx0 = jointPt.x - pivotPt.x;
+          const dy0 = jointPt.y - pivotPt.y;
+          const len = Math.hypot(dx0, dy0);
+          if (len < 1) return;
+          const ux = dx0 / len;
+          const uy = dy0 / len;
+          const bladeStart = m.outR * 0.42;
+
+          // 雨刮臂杆身：从铰接点 B 一直伸到最外端
+          ctx.strokeStyle = '#94A3B8';
+          ctx.lineWidth = 4.5;
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(jointPt.x, jointPt.y);
+          ctx.lineTo(pivotPt.x + ux * m.outR, pivotPt.y + uy * m.outR);
+          ctx.stroke();
+
+          // 无骨刮片
+          ctx.strokeStyle = '#38BDF8';
+          ctx.lineWidth = 8;
+          ctx.beginPath();
+          ctx.moveTo(pivotPt.x + ux * bladeStart, pivotPt.y + uy * bladeStart);
+          ctx.lineTo(pivotPt.x + ux * m.outR, pivotPt.y + uy * m.outR);
+          ctx.stroke();
+
+          // 转轴座
+          ctx.beginPath();
+          ctx.arc(pivotPt.x, pivotPt.y, 7, 0, Math.PI * 2);
+          ctx.fillStyle = '#1E293B';
+          ctx.fill();
+          ctx.strokeStyle = '#E2E8F0';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        };
+
+        drawWiperArm(pO4, pB);
+        if (isDual && pO5 && pB2) drawWiperArm(pO5, pB2);
+
+        // 6) 铰链圆点
+        const joints = isDual ? [pO2, pO4, pA, pB, pO5, pB2] : [pO2, pO4, pA, pB];
+        joints.forEach(pt => {
+          if (!pt) return;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, 5.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fill();
+          ctx.strokeStyle = '#F59E0B';
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+        });
+        // 固定铰点 O2 / O4（/ O5）加强标识
+        [pO2, pO4, isDual ? pO5 : null].forEach(pt => {
+          if (!pt) return;
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, 6.5, 0, Math.PI * 2);
+          ctx.fillStyle = '#0F172A';
+          ctx.fill();
+          ctx.strokeStyle = '#38BDF8';
+          ctx.lineWidth = 2.5;
+          ctx.stroke();
+        });
+      }
+
+      /* =====================================================================
+         7. 绑定所有按钮、滑块、导航与手摇事件
+         ===================================================================== */
+      function bindLabEvents(canvasId, key) {
+        const st = appState[key];
+        ['A', 'B', 'C', 'D'].forEach(letter => {
+          const prop = letter.toLowerCase();
+          const slider = document.getElementById(`${key}Slider${letter}`);
+          if (!slider) return;
+          slider.addEventListener('input', () => {
+            st[prop] = Number(slider.value);
+            syncLabSliders(key);
+            updateLabUI(key);
+          });
+        });
+
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        const updateFromPointer = evt => {
+          const rect = canvas.getBoundingClientRect();
+          const cx = (evt.touches ? evt.touches[0].clientX : evt.clientX) - rect.left;
+          const cy = (evt.touches ? evt.touches[0].clientY : evt.clientY) - rect.top;
+          const m = labMetrics[key];
+          st.theta2 = Math.atan2(m.o2Y - cy, cx - m.o2X);
+        };
+
+        canvas.addEventListener('mousedown', evt => {
+          st.dragging = true;
+          st.manual = true;
+          updateFromPointer(evt);
+        });
+        window.addEventListener('mousemove', evt => {
+          if (!st.dragging) return;
+          updateFromPointer(evt);
+        });
+        window.addEventListener('mouseup', () => {
+          st.dragging = false;
+        });
+      }
+
+      function bindAllEvents() {
+        // 顶部 7 个 Page 切换导航
+        document.querySelectorAll('.nav-page-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            goToPage(Number(btn.dataset.navPage), false);
+          });
+        });
+
+        // 重置当前页 & 全局完全重置
+        document.getElementById('btnResetCurrentPage').addEventListener('click', () => {
+          goToPage(appState.currentPage, true);
+        });
+        document.getElementById('btnResetAllPages').addEventListener('click', () => {
+          Object.assign(appState.p2, appState.p2.init, { theta2: 0.7, manual: false });
+          Object.assign(appState.p6, appState.p6.init, { theta2: 0.7, manual: false });
+          goToPage(1, true);
+        });
+
+        // Page 1 按钮
+        document.getElementById('btnSkipP1').addEventListener('click', () => {
+          if (p1Phase === 1) {
+            instantFillParagraphs(document.getElementById('p1TextBox1'), STORY_TEXTS.p1Part1, () => {
+              document.getElementById('p1BtnWrap1').classList.remove('hidden');
+            });
+          } else {
+            instantFillParagraphs(document.getElementById('p1TextBox2'), STORY_TEXTS.p1Part2, () => {
+              document.getElementById('p1BtnWrap2').classList.remove('hidden');
+            });
+          }
+        });
+
+        document.getElementById('btnP1Solve').addEventListener('click', () => {
+          p1Phase = 2;
+          document.getElementById('p1BtnWrap1').classList.add('hidden');
+          const box2 = document.getElementById('p1TextBox2');
+          playParagraphs(box2, STORY_TEXTS.p1Part2, () => {
+            document.getElementById('p1BtnWrap2').classList.remove('hidden');
+          });
+        });
+
+        document.getElementById('btnP1ToPage2').addEventListener('click', () => {
+          goToPage(2, false);
+        });
+
+        // Page 2 按钮与滑块
+        bindLabEvents('canvasP2', 'p2');
+        document.getElementById('btnP2Manual').addEventListener('click', () => {
+          appState.p2.manual = !appState.p2.manual;
+        });
+        document.getElementById('btnP2QuickDemo').addEventListener('click', () => {
+          Object.assign(appState.p2, appState.p2.std);
+          syncLabSliders('p2');
+          updateLabUI('p2');
+        });
+        document.getElementById('btnP2Finish').addEventListener('click', () => {
+          goToPage(3, false);
+        });
+
+        // Page 3 按钮
+        document.getElementById('btnSkipP3').addEventListener('click', () => {
+          instantFillParagraphs(document.getElementById('p3TextBox'), STORY_TEXTS.p3Story, () => {
+            document.getElementById('p3BtnWrap').classList.remove('hidden');
+          });
+        });
+        document.getElementById('btnP3ToPage4').addEventListener('click', () => {
+          goToPage(4, false);
+        });
+
+        // Page 4 按钮
+        document.getElementById('btnP4ToPage5').addEventListener('click', () => {
+          goToPage(5, false);
+        });
+
+        // Page 5 按钮
+        document.getElementById('btnSkipP5').addEventListener('click', () => {
+          if (p5Phase === 1 || p5Phase === 2) {
+            clearTimers();
+            instantFillParagraphs(document.getElementById('p5TextBox1'), STORY_TEXTS.p5Part1);
+            document.getElementById('p5HoweverWrap').classList.remove('hidden');
+            instantFillParagraphs(document.getElementById('p5TextBox2'), STORY_TEXTS.p5Part2, () => {
+              document.getElementById('p5BtnDiscussWrap').classList.remove('hidden');
+            });
+            p5Phase = 2;
+          } else {
+            instantFillParagraphs(document.getElementById('p5TextBox3'), STORY_TEXTS.p5Part3, () => {
+              document.getElementById('p5BtnWorkWrap').classList.remove('hidden');
+            });
+          }
+        });
+
+        document.getElementById('btnP5Discuss').addEventListener('click', () => {
+          p5Phase = 3;
+          document.getElementById('p5BtnDiscussWrap').classList.add('hidden');
+          playParagraphs(document.getElementById('p5TextBox3'), STORY_TEXTS.p5Part3, () => {
+            document.getElementById('p5BtnWorkWrap').classList.remove('hidden');
+          });
+        });
+
+        document.getElementById('btnP5ToPage6').addEventListener('click', () => {
+          goToPage(6, false);
+        });
+
+        // Page 6 按钮与滑块
+        bindLabEvents('canvasP6', 'p6');
+        document.getElementById('btnP6Manual').addEventListener('click', () => {
+          appState.p6.manual = !appState.p6.manual;
+        });
+        document.getElementById('btnP6QuickDemo').addEventListener('click', () => {
+          Object.assign(appState.p6, appState.p6.std);
+          syncLabSliders('p6');
+          updateLabUI('p6');
+        });
+        document.getElementById('btnP6Finish').addEventListener('click', () => {
+          goToPage(7, false);
+        });
+
+        // Page 7 按钮
+        document.getElementById('btnSkipP7').addEventListener('click', () => {
+          instantFillParagraphs(document.getElementById('p7TextBox'), STORY_TEXTS.p7Story, () => {
+            document.getElementById('p7CertCard').classList.remove('hidden');
+          });
+        });
+        document.getElementById('btnP7Restart').addEventListener('click', () => {
+          Object.assign(appState.p2, appState.p2.init, { theta2: 0.7, manual: false });
+          Object.assign(appState.p6, appState.p6.init, { theta2: 0.7, manual: false });
+          goToPage(1, true);
+        });
+
+        window.addEventListener('resize', () => {
+          if (appState.currentPage === 2) resizeLabCanvas('canvasP2', 'p2');
+          if (appState.currentPage === 6) resizeLabCanvas('canvasP6', 'p6');
+        });
+      }
+
+      /* =====================================================================
+         8. 主动画循环
+         ===================================================================== */
+      let lastTs = 0;
+      function loop(ts) {
+        if (!lastTs) lastTs = ts;
+        const dt = Math.min((ts - lastTs) / 1000, 0.05);
+        lastTs = ts;
+
+        if (appState.currentPage === 2) {
+          stepAndDrawLab('canvasP2', 'p2', dt);
+        } else if (appState.currentPage === 6) {
+          stepAndDrawLab('canvasP6', 'p6', dt);
+        }
+        requestAnimationFrame(loop);
+      }
+
+      window.onload = function () {
+        bindAllEvents();
+        goToPage(1, true);
+        requestAnimationFrame(loop);
+      };
+    })();
+  </script>
+</body>
+</html>
