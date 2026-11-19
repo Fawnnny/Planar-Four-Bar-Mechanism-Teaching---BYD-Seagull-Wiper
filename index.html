@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>比亚迪汽车工程研究院 | 海鸥雨刮器平面四杆机构实训系统</title>
+  <title>海鸥雨刮器平面四杆机构实训系统</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -225,9 +225,28 @@
       gap: 24px !important;
       align-items: end !important;
     }
+
+    /* 全站底层斜向教学水印（极淡不遮挡文字，不拦截鼠标交互） */
+    .global-teaching-watermark {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 30;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='220' viewBox='0 0 320 220'%3E%3Cg transform='rotate(-24 160 110)' fill='%2394A3B8' fill-opacity='0.11' font-family='PingFang SC, Microsoft YaHei, sans-serif' font-weight='700' font-size='16'%3E%3Ctext x='20' y='95'%3E教学模拟 · 仅供课堂演示%3C/text%3E%3Ctext x='45' y='125' font-size='12' fill-opacity='0.09'%3E虚构情景 · 不具法律效力%3C/text%3E%3C/g%3E%3C/svg%3E");
+      background-repeat: repeat;
+    }
+
+    /* 正式文档与奖状底纸内置斜向浅红金水印（导出 PDF 时自动保留） */
+    .official-doc-paper {
+      position: relative;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='190' viewBox='0 0 280 190'%3E%3Cg transform='rotate(-26 140 95)' fill='%23C8161D' fill-opacity='0.065' font-family='Songti SC, STSong, SimSun, serif' font-weight='700' font-size='15'%3E%3Ctext x='18' y='88'%3E教学专用 · 仅供课堂演示%3C/text%3E%3Ctext x='38' y='114' font-size='11' fill-opacity='0.055'%3E模拟文档 · 不具法律效力%3C/text%3E%3C/g%3E%3C/svg%3E") !important;
+      background-repeat: repeat !important;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
+  <!-- 全站底层教学水印层 -->
+  <div class="global-teaching-watermark" aria-hidden="true" data-pdf-ignore="true"></div>
 
   <!-- 礼花画布 -->
   <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-50 hidden"></canvas>
@@ -239,12 +258,12 @@
       <!-- 左侧：品牌标志与系统名称 -->
       <div class="flex items-center justify-between w-full xl:w-auto gap-3">
         <div class="flex items-center gap-3">
-          <img id="brandLogoImg" src="https://upload.wikimedia.org/wikipedia/commons/e/e2/BYD_Auto_2022_logo.svg" alt="BYD" class="h-7 w-auto object-contain" onerror="this.classList.add('hidden'); document.getElementById('brandLogoSvgFallback').classList.remove('hidden');" />
-          <svg id="brandLogoSvgFallback" class="hidden w-28 h-7 shrink-0" viewBox="0 0 330 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 14 H76 C94 14 104 21 104 31 C104 37 98 42 89 44 C100 46 106 51 106 59 C106 69 95 76 76 76 H12 V65 H73 C85 65 92 62 92 56 C92 50 85 47 73 47 H26 V36 H72 C83 36 90 33 90 28 C90 23 83 25 72 25 H12 V14 Z" fill="#C5001A"/>
-            <path d="M118 14 H135 L164 43 L193 14 H210 L171 52 V76 H157 V52 L118 14 Z" fill="#C5001A"/>
-            <path d="M222 14 H278 C305 14 322 27 322 45 C322 63 305 76 278 76 H222 V65 H276 C295 65 308 57 308 45 C308 33 295 25 276 25 H236 V54 H222 V14 Z" fill="#C5001A"/>
-          </svg>
+          <div class="w-8 h-8 rounded-lg bg-[#C5001A] text-white flex items-center justify-center shrink-0 shadow-xs" title="汽车机械实训教学系统">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </div>
           <div class="border-l border-slate-300 pl-3">
             <div class="text-base sm:text-lg font-extrabold text-slate-900 leading-tight">
               比亚迪汽车工程研究院 · 海鸥雨刮器四杆机构实训系统
@@ -253,19 +272,18 @@
         </div>
       </div>
 
-      <!-- 中部：11页流程导航 -->
+      <!-- 中部：10页流程导航 -->
       <nav aria-label="页面导航" class="flex items-center flex-wrap justify-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
         <button data-nav-page="1" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all bg-[#C5001A] text-white">01 录用通知</button>
         <button data-nav-page="2" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">02 岗前培训</button>
         <button data-nav-page="3" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">03 理论授课</button>
-        <button data-nav-page="4" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">04 合格证书</button>
+        <button data-nav-page="4" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">04 岗前小测</button>
         <button data-nav-page="5" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">05 课题立项</button>
         <button data-nav-page="6" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">06 单刷设计</button>
         <button data-nav-page="7" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">07 样机准备</button>
         <button data-nav-page="8" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">08 模型制作</button>
-        <button data-nav-page="9" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">09 市场反馈</button>
-        <button data-nav-page="10" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">10 双刷升级</button>
-        <button data-nav-page="11" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">11 项目结题</button>
+        <button data-nav-page="9" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">09 项目汇报</button>
+        <button data-nav-page="10" type="button" class="nav-page-btn px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:bg-white">10 项目结题</button>
       </nav>
 
       <!-- 右侧：重置按钮 -->
@@ -280,6 +298,11 @@
 
     </div>
   </header>
+
+  <!-- 全局教学免责声明条（全站每页常驻） -->
+  <div data-pdf-ignore="true" class="bg-amber-50 border-b border-amber-200 px-4 py-1.5 text-center text-xs sm:text-[13px] text-amber-900 font-medium">
+    ※ 免责声明：本系统中的所有企业情境、文档、印章、答疑及项目案例均为教学模拟虚构，仅供课堂教学与实训演示使用，与相关企业官方无任何关联，不具备任何法律效力。
+  </div>
 
   <!-- ================= 主视图容器 ================= -->
   <main class="flex-1 max-w-[1480px] w-full mx-auto px-4 sm:px-8 py-6 flex flex-col justify-center">
@@ -316,7 +339,7 @@
           <div class="border-b-[3px] border-[#C5001A] pb-4 text-center">
             <div class="pdf-header-meta flex items-center justify-between text-xs sm:text-sm font-official-serif text-slate-700 mb-2">
               <span>比人资录字〔<span id="offerDocYear">2026</span>〕第 0928 号</span>
-              <span>签发人：王传福</span>
+              <span>机密文件</span>
             </div>
             <div class="pdf-red-title text-2xl sm:text-4xl font-extrabold text-[#C5001A] font-official-serif tracking-[0.18em]">
               比亚迪股份有限公司文件
@@ -373,7 +396,7 @@
                 <div id="offerEmbeddedSignResult" class="hidden flex-1 border-b-2 border-slate-900 pb-1 flex items-end justify-center relative min-h-[64px]">
                   <img id="offerEmbeddedSignImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="受聘人亲笔签名" class="h-16 w-auto object-contain -mb-2 select-none pointer-events-none" />
                 </div>
-                <span id="offerUnsignedLine" class="flex-1 border-b-2 border-slate-900 pb-1 text-sm text-slate-400 text-center">（待下方手写签署确认）</span>
+                <span id="offerUnsignedLine" class="flex-1 border-b-2 border-slate-900 pb-1 text-sm text-slate-400 text-center"></span>
               </div>
 
               <!-- 手写输入板与确认按钮（仅在未确认签字时显示，确认后及导出PDF时完全隐藏） -->
@@ -436,6 +459,9 @@
               </div>
             </div>
           </div>
+        <div class="pt-3 mt-2 border-t border-dashed border-slate-300 text-[12px] text-slate-500 text-center font-sans leading-relaxed">
+          ※ 免责声明：本文档、印章及相关答疑情景均为课堂教学模拟虚构，仅供教学演示使用，不代表任何企业官方立场，不具备法律效力。
+        </div>
         </div>
 
         <!-- 底部：必须完成签字确认后才解锁的下一页按钮 -->
@@ -568,86 +594,79 @@
     <section id="page-intro-4" class="page-view hidden w-full max-w-5xl mx-auto">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div class="flex items-center gap-2">
-          <span class="px-3 py-0.5 rounded bg-[#C5001A] text-white text-sm font-bold">04 · 培训合格证书</span>
+          <span class="px-3 py-0.5 rounded bg-[#C5001A] text-white text-sm font-bold">04 · 岗前小测</span>
         </div>
         <button id="btnExportCertPdf" type="button" class="px-3.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold transition cursor-pointer">
-          导出培训合格证书 PDF
+          导出岗前小测 PDF
         </button>
       </div>
 
-      <!-- 纯净证书主体（导出 PDF 时只包含此区域，无任何多余按钮或横幅） -->
+      <!-- 纯净小测卷主体（导出 PDF 时只包含此区域，右上角成绩自动留空便于手写） -->
       <div id="trainingCertPaper" class="official-doc-paper p-8 sm:p-14 space-y-6">
         <div class="border-b-[3px] border-amber-700 pb-4 text-center">
           <div class="pdf-header-meta flex items-center justify-between text-xs sm:text-sm font-official-serif text-slate-700 mb-2">
-            <span>比工院培证字〔<span id="certDocYear">2026</span>〕第 1024 号</span>
+            <span>比工院岗测字〔<span id="certDocYear">2026</span>〕第 1024 号</span>
             <span>考核成绩：<strong id="quizScoreDisplay" class="text-[#C5001A]">待核定</strong></span>
           </div>
           <div class="pdf-red-title text-2xl sm:text-4xl font-extrabold text-[#C5001A] font-official-serif tracking-[0.18em]">
             比亚迪汽车工程研究院
           </div>
           <div class="text-xs font-bold text-amber-800 tracking-[0.22em] mt-1">
-            BYD AUTOMOTIVE ENGINEERING RESEARCH INSTITUTE CERTIFICATE
+            BYD AUTOMOTIVE ENGINEERING RESEARCH INSTITUTE · PRE-JOB QUIZ
           </div>
           <h1 class="pdf-doc-subtitle text-2xl sm:text-3xl font-extrabold text-slate-900 font-official-serif mt-5 tracking-widest">
-            新员工岗前技能培训合格证书
+            新员工岗前技能小测
           </h1>
         </div>
 
         <div class="pdf-body-text text-[19px] sm:text-[21px] text-slate-900 font-official-serif leading-[2.0]">
           <p class="indent-8">
-            兹证明实习机械研发工程师 <strong id="certEngineerName" class="text-[#C5001A] px-2 border-b border-slate-900"></strong> 同志，已完成《汽车机械基础 · 任务9：汽车常见四杆机构》岗前必修课程培训，核心技术指标核定如下：
+            实习机械研发工程师 <strong id="certEngineerName" class="text-[#C5001A] px-2 border-b border-slate-900"></strong> 已完成《汽车机械基础 · 模块三：汽车常用机构分析》岗前理论学习，请完成以下 5 项核心知识要点小测（每题 20 分，满分 100 分）：
           </p>
         </div>
 
-        <!-- 6条核定内容（点击空白横线直接浮现文字） -->
-        <div id="quizItemsContainer" class="pdf-cert-quiz-box space-y-3.5 text-[18px] sm:text-[20px] text-slate-900 font-official-serif bg-amber-50/20 p-6 rounded border border-amber-700/40">
-          <div data-quiz-idx="0" class="quiz-slot py-2 border-b border-dashed border-slate-300 leading-relaxed">
+        <!-- 5条核心知识小测（点击空白横线浮现参考答案） -->
+        <div id="quizItemsContainer" class="pdf-cert-quiz-box space-y-4 text-[18px] sm:text-[20px] text-slate-900 font-official-serif bg-amber-50/20 p-6 rounded border border-amber-700/40">
+          <div data-quiz-idx="0" class="quiz-slot py-2.5 border-b border-dashed border-slate-300 leading-relaxed">
             <span class="font-bold text-[#C5001A]">一、构件组成：</span>
-            铰链四杆机构由固定不动的机架 d、作平面传力运动的连杆 b，以及两个连架杆——即能作 360° 整周回转的
+            平面铰链四杆机构由固定不动的机架、不与机架直接相连的连杆，以及与机架相连的两个连架杆——即能作 360° 整周转动的
             <span data-quiz-btn="0" class="quiz-blank hidden-answer-blank">　　　　　　　　　　　　</span>
             组成。
           </div>
 
-          <div data-quiz-idx="1" class="quiz-slot py-2 border-b border-dashed border-slate-300 leading-relaxed">
+          <div data-quiz-idx="1" class="quiz-slot py-2.5 border-b border-dashed border-slate-300 leading-relaxed">
             <span class="font-bold text-[#C5001A]">二、基本类型：</span>
-            依据两个连架杆能否作整周回转，平面铰链四杆机构分为三种基本类型：
+            按照两个连架杆的运动形式不同，平面铰链四杆机构可分为三种基本类型：
             <span data-quiz-btn="1" class="quiz-blank hidden-answer-blank">　　　　　　　　　　　　　　</span>。
           </div>
 
-          <div data-quiz-idx="2" class="quiz-slot py-2 border-b border-dashed border-slate-300 leading-relaxed">
+          <div data-quiz-idx="2" class="quiz-slot py-2.5 border-b border-dashed border-slate-300 leading-relaxed">
             <span class="font-bold text-[#C5001A]">三、运动转换：</span>
-            汽车风挡刮水器应用了曲柄摇杆机构（双雨刮叠加双摇杆机构），其核心功能是将雨刮电机的
+            汽车风挡刮水器应用了曲柄摇杆机构，其核心运动特点是将主动曲柄的
             <span data-quiz-btn="2" class="quiz-blank hidden-answer-blank">　　　　　　　　　　　　　　</span>。
           </div>
 
-          <div data-quiz-idx="3" class="quiz-slot py-2 border-b border-dashed border-slate-300 leading-relaxed">
+          <div data-quiz-idx="3" class="quiz-slot py-2.5 border-b border-dashed border-slate-300 leading-relaxed">
             <span class="font-bold text-[#C5001A]">四、杆长准则：</span>
-            铰链四杆机构中欲使曲柄实现 360° 整周回转而不发生卡死堵转，四根杆长须满足格拉霍夫准则：
+            铰链四杆机构中连架杆成为曲柄的首要杆长条件（格拉霍夫准则）为：
             <span data-quiz-btn="3" class="quiz-blank hidden-answer-blank">　　　　　　　　　　　　　　</span>。
           </div>
 
-          <div data-quiz-idx="4" class="quiz-slot py-2 border-b border-dashed border-slate-300 leading-relaxed">
+          <div data-quiz-idx="4" class="quiz-slot py-2.5 leading-relaxed">
             <span class="font-bold text-[#C5001A]">五、曲柄判据：</span>
-            在满足上述杆长条件（S + L ≤ P + Q）的前提下，欲构成雨刮器所需的曲柄摇杆机构，必须将最短杆取作
+            在满足上述杆长之和条件的前提下，欲构成雨刮器所需的曲柄摇杆机构，必须将最短杆取作
             <span data-quiz-btn="4" class="quiz-blank hidden-answer-blank">　　　　　　　　　　　　</span>。
-          </div>
-
-          <div data-quiz-idx="5" class="quiz-slot py-2 leading-relaxed">
-            <span class="font-bold text-[#C5001A]">六、性能指标：</span>
-            雨刮摇杆往复摆角估算式为 ψ ≈ 2·arcsin(a/c)，因此
-            <span data-quiz-btn="5" class="quiz-blank hidden-answer-blank">　　　　　　　　　　　　　　</span>
-            以保证传力顺畅。
           </div>
         </div>
 
         <div class="pdf-cert-footer-grid grid grid-cols-1 sm:grid-cols-2 gap-6 items-end pt-4 text-slate-900 font-official-serif relative min-h-[110px]">
           <div class="space-y-1 text-[18px]">
             <div>考核导师：<strong>朱春松</strong></div>
-            <div>分配项目：<strong>比亚迪海洋网 · “海鸥”雨刮研发组</strong></div>
+            <div>实训课题：<strong>比亚迪海洋网 · “海鸥”雨刮研发组</strong></div>
           </div>
           <div class="text-right space-y-1 text-[18px] relative">
             <div class="font-extrabold text-[20px]">比亚迪汽车工程研究院</div>
-            <div id="certOfficialDate" class="text-[17px] text-slate-700">二〇二六年十一月十七日</div>
+            <div id="certOfficialDate" class="text-[17px] text-slate-700">二〇二六年十一月十九日</div>
             <div id="certOfficialStamp" class="hidden pointer-events-none select-none absolute -top-10 right-2 stamp-animate">
               <svg class="w-40 h-40" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <defs>
@@ -665,18 +684,21 @@
                   </text>
                   <polygon points="90,62 95.8,79.6 114.2,79.6 99.4,90.6 105,108.2 90,97.4 75,108.2 80.6,90.6 65.8,79.6 84.2,79.6" fill="#C8161D"/>
                   <text x="90" y="135" text-anchor="middle" fill="#C8161D" font-size="15.5" font-weight="900" letter-spacing="2" font-family="Songti SC, STSong, SimSun, Noto Serif SC, serif">教学专用章</text>
-                  <text x="90" y="153" text-anchor="middle" fill="#C8161D" font-size="10.5" font-weight="700" letter-spacing="1" font-family="Songti SC, STSong, SimSun, Noto Serif SC, serif">考核合格 · 100分</text>
+                  <text x="90" y="153" text-anchor="middle" fill="#C8161D" font-size="10.5" font-weight="700" letter-spacing="1" font-family="Songti SC, STSong, SimSun, Noto Serif SC, serif">岗前小测通过</text>
                 </g>
               </svg>
             </div>
           </div>
         </div>
+        <div class="pt-3 mt-2 border-t border-dashed border-slate-300 text-[12px] text-slate-500 text-center font-sans leading-relaxed">
+          ※ 免责声明：本文档、印章及相关答疑情景均为课堂教学模拟虚构，仅供教学演示使用，不代表任何企业官方立场，不具备法律效力。
+        </div>
       </div>
 
-      <!-- 证书外部：满分通过跳转栏（不在证书内部，导出PDF时绝不会被截入） -->
+      <!-- 小测外部：满分通过手动进入按钮（不自动跳转，方便留存或导出PDF） -->
       <div id="quizFullScoreBanner" class="hidden mt-5 bg-[#C5001A] text-white p-5 rounded-xl shadow-lg flex flex-wrap items-center justify-between gap-4">
         <div class="text-xl font-extrabold">
-          🎉 考核成绩 100 分！《新员工岗前技能培训合格证书》已签发，正在前往“海鸥”研发项目组...
+          🎉 岗前小测 100 分通过！点击右侧按钮即可前往“海鸥”研发项目组报到。
         </div>
         <button id="btnQuizToProjectNow" type="button" class="px-6 py-2.5 rounded-lg bg-white text-[#C5001A] font-extrabold text-base cursor-pointer shrink-0">
           前往项目组报到 →
@@ -735,7 +757,7 @@
       <div class="byd-card p-4 sm:p-5 mb-5 border-l-4 border-l-[#C5001A] flex flex-wrap items-center justify-between gap-4">
         <div>
           <div class="flex items-center gap-2.5">
-            <span class="px-2.5 py-0.5 rounded bg-[#C5001A] text-white text-sm font-bold">06 · 1.0 单雨刮设计</span>
+            <span class="px-2.5 py-0.5 rounded bg-[#C5001A] text-white text-sm font-bold">06 · 海鸥单雨刮设计</span>
             <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">海鸥 1.0 单雨刮平面四杆机构参数设定</h2>
           </div>
           <p class="text-[18px] text-slate-600 mt-1">
@@ -875,7 +897,7 @@
         </h1>
 
         <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-wrap items-center justify-between gap-3">
-          <span class="text-[18px] font-bold text-slate-800">已锁定的 1.0 单雨刮四杆尺寸：</span>
+          <span class="text-[18px] font-bold text-slate-800">已锁定的海鸥单雨刮四杆尺寸：</span>
           <span id="p3SavedParamsBadge" class="font-mono-num text-[19px] font-extrabold text-[#C5001A]">
             a=60mm(3.0cm) · b=196mm(9.8cm) · c=84mm(4.2cm) · d=204mm(10.2cm)
           </span>
@@ -924,23 +946,23 @@
             <rect x="210" y="40" width="230" height="90" rx="6" fill="rgba(245,158,11,0.10)" stroke="#FBBF24" stroke-width="2" stroke-dasharray="5,3"/>
             <text id="p4SvgZoneText" x="222" y="64" fill="#FDE047" font-size="15" font-weight="bold">主驾视野框 (设计摆角 ψ = 91.2°)</text>
 
-            <line x1="330" y1="196" x2="520" y2="160" stroke="#94A3B8" stroke-width="2.5" stroke-dasharray="6,4"/>
+            <line x1="330" y1="184" x2="520" y2="184" stroke="#94A3B8" stroke-width="2.5" stroke-dasharray="6,4"/>
             <text id="p4SvgTextD" x="425" y="222" text-anchor="middle" fill="#E2E8F0" font-size="15" font-weight="bold">④ 机架 d：量出 10.2 cm (204mm) 定位 O₂ 与 O₄</text>
 
-            <line x1="330" y1="196" x2="365" y2="162" stroke="#38BDF8" stroke-width="8" stroke-linecap="round"/>
+            <line x1="330" y1="184" x2="365" y2="150" stroke="#38BDF8" stroke-width="8" stroke-linecap="round"/>
             <text id="p4SvgTextA" x="215" y="180" fill="#7DD3FC" font-size="15" font-weight="bold">① 曲柄 a (3.0cm / 60mm)</text>
 
-            <line x1="365" y1="162" x2="495" y2="124" stroke="#F59E0B" stroke-width="7" stroke-linecap="round"/>
+            <line x1="365" y1="150" x2="495" y2="138" stroke="#F59E0B" stroke-width="7" stroke-linecap="round"/>
             <text id="p4SvgTextB" x="415" y="134" text-anchor="middle" fill="#FCD34D" font-size="15" font-weight="bold">② 连杆 b (9.8cm / 196mm)</text>
 
-            <line x1="520" y1="160" x2="495" y2="124" stroke="#10B981" stroke-width="9" stroke-linecap="round"/>
-            <line x1="495" y1="124" x2="435" y2="44" stroke="#34D399" stroke-width="6" stroke-linecap="round"/>
+            <line x1="520" y1="184" x2="495" y2="138" stroke="#10B981" stroke-width="9" stroke-linecap="round"/>
+            <line x1="495" y1="138" x2="435" y2="44" stroke="#34D399" stroke-width="6" stroke-linecap="round"/>
             <text id="p4SvgTextC" x="655" y="138" text-anchor="middle" fill="#6EE7B7" font-size="15" font-weight="bold">③ 摇杆 c (4.2cm) 与雨刮臂在结点 B 共线相连</text>
 
-            <circle cx="330" cy="196" r="6.5" fill="#EF4444" stroke="#FFF" stroke-width="2"/>
-            <circle cx="520" cy="160" r="6.5" fill="#EF4444" stroke="#FFF" stroke-width="2"/>
-            <circle cx="365" cy="162" r="5.5" fill="#FFF" stroke="#0284C7" stroke-width="2"/>
-            <circle cx="495" cy="124" r="6" fill="#FFF" stroke="#D97706" stroke-width="2.5"/>
+            <circle cx="330" cy="184" r="6.5" fill="#EF4444" stroke="#FFF" stroke-width="2"/>
+            <circle cx="520" cy="184" r="6.5" fill="#EF4444" stroke="#FFF" stroke-width="2"/>
+            <circle cx="365" cy="150" r="5.5" fill="#FFF" stroke="#0284C7" stroke-width="2"/>
+            <circle cx="495" cy="138" r="6" fill="#FFF" stroke="#D97706" stroke-width="2.5"/>
           </svg>
         </div>
 
@@ -983,258 +1005,195 @@
     </section>
 
     <!-- =========================================================================
-         PAGE 09: 市场反馈与暴雨夜盲区反转
+         PAGE 09: 项目汇报（向总工程师展示单雨刮设计方案与1:20实物样机）
          ========================================================================= -->
     <section id="page-5" class="page-view hidden w-full max-w-5xl mx-auto">
       <div class="byd-story-box p-6 sm:p-9 space-y-6">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
           <div class="flex items-center gap-3">
-            <span class="px-3 py-0.5 rounded bg-[#C5001A] text-white text-sm font-bold">09 · 市场反馈</span>
-            <span class="text-base font-semibold text-slate-500">量产上市与暴雨夜紧急攻关</span>
+            <span class="px-3 py-0.5 rounded bg-[#C5001A] text-white text-sm font-bold">09 · 项目汇报</span>
+            <span class="text-base font-semibold text-slate-500">海鸥雨刮机构立项评审答辩现场</span>
           </div>
           <button id="btnSkipP5" type="button" class="text-sm font-semibold text-slate-500 hover:text-slate-800">显示全文</button>
         </div>
 
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">
-          新车热销背后：单雨刮左上角盲区暴露
+          走上评审台：向总工程师汇报海鸥单雨刮设计方案
         </h1>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-200">
-            <img id="storyImgP5A" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/2023_BYD_Seagull_%28rear%29.jpg" data-fallback="./assets/images/story_p5a_fallback.webp" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}" alt="比亚迪海鸥热销" class="w-full h-48 object-cover" />
+        <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <span class="text-[17px] font-bold text-slate-800">本次汇报展示的四杆机构参数：</span>
+          <span id="p5ReportParamsBadge" class="font-mono-num text-[18px] font-extrabold text-[#C5001A]">
+            a=60mm · b=196mm · c=84mm · d=204mm
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div id="p5TextBox1" class="lg:col-span-8 text-[20px] sm:text-[22px] text-slate-800 leading-relaxed space-y-4 min-h-[200px] bg-slate-50 p-6 rounded-xl border border-slate-200"></div>
+          <div class="lg:col-span-4 bg-slate-900 rounded-xl overflow-hidden border border-slate-200">
+            <img id="storyImgP5A" src="https://upload.wikimedia.org/wikipedia/commons/9/98/2023_BYD_Seagull_%28front%29.jpg" data-fallback="./assets/images/story_p5a_fallback.webp" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}" alt="比亚迪海鸥雨刮方案汇报" class="w-full h-56 object-cover" />
           </div>
-          <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-200">
-            <img id="storyImgP5B" src="./assets/images/story_p5b_wiper_closeup.webp" alt="暴雨台架测试" class="w-full h-48 object-cover" />
+        </div>
+
+        <!-- 汇报中…… 状态框与结束汇报按钮 -->
+        <div id="p5ReportingPanel" class="hidden pt-2 space-y-5">
+          <div class="bg-amber-50 border-2 border-amber-400 rounded-2xl p-6 text-center shadow-sm">
+            <div class="inline-flex items-center justify-center gap-3">
+              <span class="w-3.5 h-3.5 rounded-full bg-[#C5001A] animate-ping"></span>
+              <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-widest">汇报中……</span>
+            </div>
+            <p class="text-base sm:text-lg text-slate-600 mt-2 font-medium">
+              请各位实习工程师结合手中的 1:20 实物样机，向总工程师演示曲柄 360° 旋转带动雨刮往复摆动的效果，并阐述四杆设计思路。
+            </p>
           </div>
-        </div>
 
-        <div id="p5TextBox1" class="text-[20px] sm:text-[22px] text-slate-800 leading-relaxed space-y-4 bg-emerald-50/60 p-6 rounded-xl border border-emerald-200"></div>
-
-        <div id="p5HoweverWrap" class="hidden space-y-4">
-          <div class="bg-[#C5001A] text-white px-5 py-2.5 rounded-xl text-[22px] font-extrabold tracking-widest">
-            然而……
-          </div>
-          <div id="p5TextBox2" class="text-[20px] sm:text-[22px] text-slate-800 leading-relaxed space-y-4 bg-rose-50/80 p-6 rounded-xl border border-rose-200"></div>
-        </div>
-
-        <div id="p5BtnDiscussWrap" class="hidden pt-1 flex justify-center">
-          <button id="btnP5Discuss" type="button" class="btn-primary-red px-9 py-3.5 rounded-xl text-[21px] font-extrabold cursor-pointer">
-            开始讨论
-          </button>
-        </div>
-
-        <div id="p5TextBox3" class="hidden text-[20px] sm:text-[22px] text-slate-800 leading-relaxed space-y-4 bg-sky-50/70 p-6 rounded-xl border border-sky-200"></div>
-
-        <div id="p5BtnWorkWrap" class="hidden pt-2 flex justify-center">
-          <button id="btnP5ToPage6" type="button" class="btn-primary-blue px-10 py-3.5 rounded-xl text-[21px] font-extrabold cursor-pointer">
-            回去工作 →
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================================
-         PAGE 10: 2026款海鸥 2.0 同步双雨刮四杆机构重构实验室
-         ========================================================================= -->
-    <section id="page-6" class="page-view hidden w-full">
-      <div class="byd-card p-4 sm:p-5 mb-5 border-l-4 border-l-sky-600 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <div class="flex items-center gap-2.5">
-            <span class="px-2.5 py-0.5 rounded bg-sky-600 text-white text-sm font-bold">10 · 2.0 双雨刮升级</span>
-            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">2026款海鸥同步双雨刮四杆参数重构</h2>
-          </div>
-          <p class="text-[18px] text-slate-600 mt-1">
-            调节曲柄 a、连杆 b、摇杆 c、机架 d 长度，使双雨刮同步摆角 <strong>ψ 达 86°~106°</strong>、最小传动角 <strong>γ_min ≥ 40°</strong>，主驾视野清晰度突破 85%。
-          </p>
-        </div>
-        <div class="flex items-center gap-3">
-          <button id="btnP6QuickDemo" type="button" class="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-base font-bold border border-slate-300 transition">
-            填入参考值
-          </button>
-          <button id="btnP6Finish" type="button" class="hidden btn-primary-red px-7 py-2.5 rounded-xl text-[20px] font-extrabold cursor-pointer">
-            进入结局 →
-          </button>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        <div class="lg:col-span-7 byd-card p-4 flex flex-col gap-3">
-          <div class="flex items-center justify-between px-1">
-            <span class="text-lg font-extrabold text-slate-900">2026款海鸥 2.0 同步双雨刮运动仿真台架</span>
-            <button id="btnP6Manual" type="button" class="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold border border-slate-300">
-              手摇 / 自动切换
+          <div class="flex justify-center">
+            <button id="btnP5FinishReport" type="button" class="btn-primary-red px-12 py-4 rounded-xl text-[22px] font-extrabold cursor-pointer shadow-lg">
+              结束汇报 →
             </button>
           </div>
-
-          <div class="w-full aspect-[16/10] bg-slate-950 rounded-xl overflow-hidden relative border border-slate-300">
-            <canvas id="canvasP6" class="w-full h-full block"></canvas>
-            <div id="p6StallAlert" class="hidden absolute bottom-3 left-1/2 -translate-x-1/2 w-[92%] bg-red-600/95 text-white px-4 py-2 rounded-lg text-base font-bold text-center">
-              曲柄卡死堵转：请调小曲柄 a 使其成为最短杆，并满足 S + L ≤ P + Q
-            </div>
-          </div>
-        </div>
-
-        <div class="lg:col-span-5 flex flex-col gap-4">
-          <div class="byd-card p-5 space-y-3.5">
-            <h3 class="text-lg font-extrabold text-slate-900 border-b border-slate-200 pb-2">双雨刮四杆长度参数调节</h3>
-
-            <!-- 1. 曲柄 a -->
-            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div class="flex justify-between items-baseline mb-1">
-                <label for="p6SliderA" class="text-[18px] font-bold text-slate-900">1. 曲柄 a (主动杆)</label>
-                <div>
-                  <span id="p6ValA" class="text-[20px] font-extrabold font-mono-num text-sky-700">38 mm</span>
-                  <span id="p6ChopA" class="ml-1 text-sm font-mono-num px-1.5 py-0.5 rounded bg-sky-100 text-sky-900 font-bold">杆 1.9cm</span>
-                </div>
-              </div>
-              <input id="p6SliderA" type="range" min="30" max="110" step="1" value="38" class="w-full my-1" />
-              <div class="text-[15px] text-slate-500">增大曲柄 a 以扩大双刷摆角（参考范围：58 ~ 62 mm）</div>
-            </div>
-
-            <!-- 2. 连杆 b -->
-            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div class="flex justify-between items-baseline mb-1">
-                <label for="p6SliderB" class="text-[18px] font-bold text-slate-900">2. 连杆 b (主传力杆)</label>
-                <div>
-                  <span id="p6ValB" class="text-[20px] font-extrabold font-mono-num text-amber-700">145 mm</span>
-                  <span id="p6ChopB" class="ml-1 text-sm font-mono-num px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 font-bold">杆 7.3cm</span>
-                </div>
-              </div>
-              <input id="p6SliderB" type="range" min="90" max="230" step="1" value="145" class="w-full my-1" />
-              <div class="text-[15px] text-slate-500">铰接于右雨刮底端结点 B（参考范围：180 ~ 192 mm）</div>
-            </div>
-
-            <!-- 3. 摇杆 c -->
-            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div class="flex justify-between items-baseline mb-1">
-                <label for="p6SliderC" class="text-[18px] font-bold text-slate-900">3. 摇杆 c (双刮臂根部摇杆)</label>
-                <div>
-                  <span id="p6ValC" class="text-[20px] font-extrabold font-mono-num text-emerald-700">98 mm</span>
-                  <span id="p6ChopC" class="ml-1 text-sm font-mono-num px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-900 font-bold">杆 4.9cm</span>
-                </div>
-              </div>
-              <input id="p6SliderC" type="range" min="50" max="135" step="1" value="98" class="w-full my-1" />
-              <div class="text-[15px] text-slate-500">左右摇杆等长同步摆动（参考范围：84 ~ 88 mm）</div>
-            </div>
-
-            <!-- 4. 机架 d -->
-            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div class="flex justify-between items-baseline mb-1">
-                <label for="p6SliderD" class="text-[18px] font-bold text-slate-900">4. 机架 d (O₂O₄ 轴距)</label>
-                <div>
-                  <span id="p6ValD" class="text-[20px] font-extrabold font-mono-num text-slate-800">160 mm</span>
-                  <span id="p6ChopD" class="ml-1 text-sm font-mono-num px-1.5 py-0.5 rounded bg-slate-200 text-slate-900 font-bold">距 8.0cm</span>
-                </div>
-              </div>
-              <input id="p6SliderD" type="range" min="100" max="230" step="1" value="160" class="w-full my-1" />
-              <div class="text-[15px] text-slate-500">电机轴与右摇杆轴间距（参考范围：190 ~ 200 mm）</div>
-            </div>
-          </div>
-
-          <div class="byd-card p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="text-lg font-extrabold text-slate-900">2.0 双雨刮验收指标</h3>
-              <span id="p6StatusBadge" class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-sm font-bold">未达标</span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2.5 text-sm">
-              <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                <div class="text-slate-500">主驾视野清晰度 (&gt;85%)</div>
-                <div id="p6StatClarity" class="text-base font-extrabold font-mono-num text-amber-600 mt-0.5">58%</div>
-              </div>
-              <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                <div class="text-slate-500">双刷同步摆角 ψ (86°~106°)</div>
-                <div id="p6StatPsi" class="text-base font-extrabold font-mono-num text-slate-800 mt-0.5">46.2°</div>
-              </div>
-              <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                <div class="text-slate-500">最小传动角 γ_min (≥40°)</div>
-                <div id="p6StatGamma" class="text-base font-extrabold font-mono-num text-slate-800 mt-0.5">34.5°</div>
-              </div>
-              <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                <div class="text-slate-500">杆长条件 (S+L ≤ P+Q)</div>
-                <div id="p6StatGrashof" class="text-base font-extrabold font-mono-num text-emerald-600 mt-0.5">198 ≤ 243</div>
-              </div>
-            </div>
-
-            <ul id="p6Checklist" class="space-y-1.5 text-[16px] pt-1"></ul>
-          </div>
         </div>
       </div>
     </section>
 
     <!-- =========================================================================
-         PAGE 11: 项目结题
+         PAGE 10: 项目结题与《表彰奖状》（正式荣誉奖状，支持一键导出 PDF）
          ========================================================================= -->
-    <section id="page-7" class="page-view hidden w-full max-w-5xl mx-auto">
+    <section id="page-7" class="page-view hidden w-full max-w-5xl mx-auto space-y-6">
       <div class="byd-story-box p-6 sm:p-9 space-y-6">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
           <div class="flex items-center gap-3">
-            <span class="px-3 py-0.5 rounded bg-[#C5001A] text-white text-sm font-bold">11 · 项目结题</span>
-            <span class="text-base font-semibold text-slate-500">比亚迪海鸥 2026 款量产总结</span>
+            <span class="px-3 py-0.5 rounded bg-[#C5001A] text-white text-sm font-bold">10 · 项目结题</span>
+            <span class="text-base font-semibold text-slate-500">方案通过立项评审 · 项目组荣誉表彰</span>
           </div>
           <button id="btnSkipP7" type="button" class="text-sm font-semibold text-slate-500 hover:text-slate-800">显示全文</button>
         </div>
 
         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">
-          2026款海鸥焕新上市：研发攻关圆满完成
+          评审圆满通过！海鸥单雨刮机构获批立项量产
         </h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-          <div id="p7TextBox" class="lg:col-span-7 text-[20px] sm:text-[22px] text-slate-800 leading-relaxed space-y-4 min-h-[200px] bg-slate-50 p-6 rounded-xl border border-slate-200"></div>
+          <div id="p7TextBox" class="lg:col-span-7 text-[20px] sm:text-[22px] text-slate-800 leading-relaxed space-y-4 min-h-[190px] bg-slate-50 p-6 rounded-xl border border-slate-200"></div>
           <div class="lg:col-span-5 bg-slate-900 rounded-xl overflow-hidden border border-slate-200">
-            <img id="storyImgP7" src="https://upload.wikimedia.org/wikipedia/commons/e/e6/BYD_Seagull_facelift_001.jpg" data-fallback="./assets/images/story_p7_fallback.webp" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}" alt="2026款比亚迪海鸥" class="w-full h-60 object-cover" />
+            <img id="storyImgP7" src="https://upload.wikimedia.org/wikipedia/commons/e/e6/BYD_Seagull_facelift_001.jpg" data-fallback="./assets/images/story_p7_fallback.webp" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}" alt="比亚迪海鸥项目结题" class="w-full h-56 object-cover" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 项目组正式表彰奖状（可一键导出 PDF） -->
+      <div id="p7CertCard" class="hidden space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-lg bg-amber-600 text-white text-sm font-bold">🏆 项目组荣誉表彰奖状</span>
+          </div>
+          <button id="btnExportAwardPdf" type="button" class="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold transition cursor-pointer shadow-sm">
+            导出表彰奖状 PDF
+          </button>
+        </div>
+
+        <div id="awardCertPaper" class="official-doc-paper p-6 sm:p-10" style="border: 4px double #B45309; background-color: #FFFDF7;">
+          <div class="border-2 border-[#C5001A]/70 p-6 sm:p-10 space-y-6 relative">
+            <div class="flex items-center justify-between text-xs sm:text-sm font-official-serif text-amber-900/80 border-b border-amber-700/30 pb-2">
+              <span>比海鸥项奖字〔<span id="awardDocYear">2026</span>〕第 01 号</span>
+              <span>比亚迪海洋网 · 海鸥雨刮研发项目组</span>
+            </div>
+
+            <div class="text-center space-y-2 pt-2">
+              <div class="text-xs sm:text-sm font-bold text-amber-800 tracking-[0.35em]">
+                CERTIFICATE OF COMMENDATION
+              </div>
+              <h2 class="text-4xl sm:text-5xl font-extrabold text-[#C5001A] font-official-serif tracking-[0.45em] pl-[0.45em]">
+                表彰奖状
+              </h2>
+              <div class="inline-block px-5 py-1 rounded-full bg-amber-100 border border-amber-500/60 text-amber-900 font-extrabold text-base sm:text-lg tracking-widest mt-1">
+                优秀实习机械研发工程师
+              </div>
+            </div>
+
+            <div class="pdf-body-text text-[19px] sm:text-[21px] text-slate-900 font-official-serif leading-[2.1] pt-2">
+              <p class="font-bold text-slate-900">
+                <strong id="p7CertEngineerName" class="text-[#C5001A] px-2 border-b-2 border-amber-700"></strong> 研发团队：
+              </p>
+              <p class="indent-10 mt-2">
+                在比亚迪“海鸥（Seagull）”前风挡单雨刮平面四杆机构攻关课题中，你们立足整车极短前悬紧凑空间约束，精准运用铰链四杆机构原理与格拉霍夫准则，独立完成了运动学仿真优化与 1:20 实体样机制作，并在项目立项评审汇报中表现突出，方案顺利通过总工程师验收。
+              </p>
+              <p class="indent-10 mt-2">
+                经项目组评定，特授予<strong>“优秀实习机械研发工程师”</strong>荣誉称号，颁发此状，以资鼓励！
+              </p>
+            </div>
+
+            <div class="bg-white/85 rounded-lg p-4 border border-amber-700/30 flex flex-wrap items-center justify-between gap-2 text-[16px] font-official-serif">
+              <span class="font-bold text-slate-700">验收归档单雨刮四杆参数：</span>
+              <span id="p7SummaryP2" class="font-mono-num font-extrabold text-[#C5001A]">
+                a=60mm · b=196mm · c=84mm · d=204mm
+              </span>
+            </div>
+
+            <div class="pdf-cert-footer-grid grid grid-cols-1 sm:grid-cols-2 gap-6 items-end pt-6 text-slate-900 font-official-serif relative min-h-[120px]">
+              <div class="space-y-1 text-[17px]">
+                <div>项目指导导师：<strong>朱春松</strong></div>
+                <div>评审结论：<strong>优秀 · 准予立项结题</strong></div>
+              </div>
+              <div class="text-right space-y-1 text-[18px] relative">
+                <div class="font-extrabold text-[20px]">比亚迪海鸥雨刮研发项目组</div>
+                <div id="awardOfficialDate" class="text-[17px] text-slate-700">二〇二六年十一月十九日</div>
+                <div id="awardOfficialStamp" class="pointer-events-none select-none absolute -top-10 right-2 stamp-animate">
+                  <svg class="w-40 h-40" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <defs>
+                      <filter id="awardInkTexture" x="-5%" y="-5%" width="110%" height="110%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="2" result="noise"/>
+                        <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.15" xChannelSelector="R" yChannelSelector="G"/>
+                      </filter>
+                      <path id="awardStampArc" d="M 41.5,118 A 56,56 0 1,1 138.5,118" fill="none"/>
+                    </defs>
+                    <g filter="url(#awardInkTexture)" opacity="0.88">
+                      <circle cx="90" cy="90" r="80" fill="none" stroke="#C8161D" stroke-width="5"/>
+                      <circle cx="90" cy="90" r="73" fill="none" stroke="#C8161D" stroke-width="1.2" stroke-opacity="0.78"/>
+                      <text fill="#C8161D" font-size="16" font-weight="700" letter-spacing="3.5" font-family="Songti SC, STSong, SimSun, Noto Serif SC, serif">
+                        <textPath href="#awardStampArc" xlink:href="#awardStampArc" startOffset="50%" text-anchor="middle">海鸥雨刮机构实训项目组</textPath>
+                      </text>
+                      <polygon points="90,62 95.8,79.6 114.2,79.6 99.4,90.6 105,108.2 90,97.4 75,108.2 80.6,90.6 65.8,79.6 84.2,79.6" fill="#C8161D"/>
+                      <text x="90" y="135" text-anchor="middle" fill="#C8161D" font-size="15.5" font-weight="900" letter-spacing="2" font-family="Songti SC, STSong, SimSun, Noto Serif SC, serif">教学专用章</text>
+                      <text x="90" y="153" text-anchor="middle" fill="#C8161D" font-size="10.5" font-weight="700" letter-spacing="1" font-family="Songti SC, STSong, SimSun, Noto Serif SC, serif">荣誉表彰 · 结题</text>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+            </div>
+        <div class="pt-3 mt-2 border-t border-dashed border-slate-300 text-[12px] text-slate-500 text-center font-sans leading-relaxed">
+          ※ 免责声明：本文档、印章及相关答疑情景均为课堂教学模拟虚构，仅供教学演示使用，不代表任何企业官方立场，不具备法律效力。
+        </div>
           </div>
         </div>
 
-        <div id="p7CertCard" class="hidden bg-slate-50 border border-slate-300 rounded-xl p-6 space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
-            <div class="text-lg font-extrabold text-[#C5001A]">
-              比亚迪汽车工程研究院 · 课题结题归档（研发团队：<span id="p7CertEngineerName"></span>）
-            </div>
-            <span class="px-3 py-0.5 rounded-full bg-emerald-600 text-white text-sm font-bold">主驾视野清晰度 93% 验收通过</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[17px]">
-            <div class="bg-white p-4 rounded-lg border border-slate-200">
-              <div class="font-bold text-slate-500 text-sm">第一阶段：1.0 单雨刮四杆参数</div>
-              <div id="p7SummaryP2" class="font-mono-num font-extrabold text-slate-900 mt-1">
-                a=60mm · b=196mm · c=84mm · d=204mm
-              </div>
-            </div>
-            <div class="bg-white p-4 rounded-lg border border-slate-200">
-              <div class="font-bold text-sky-700 text-sm">第二阶段：2026款 2.0 同步双雨刮四杆参数</div>
-              <div id="p7SummaryP6" class="font-mono-num font-extrabold text-[#C5001A] mt-1">
-                a=60mm · b=186mm · c=86mm · d=196mm
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-2 flex justify-center">
-            <button id="btnP7Restart" type="button" class="btn-primary-red px-8 py-3 rounded-xl text-[19px] font-extrabold cursor-pointer">
-              重新开始实训
-            </button>
-          </div>
+        <div class="pt-2 flex justify-center">
+          <button id="btnP7Restart" type="button" class="btn-primary-red px-8 py-3 rounded-xl text-[19px] font-extrabold cursor-pointer">
+            重新开始实训
+          </button>
         </div>
       </div>
     </section>
 
   </main>
 
+  <!-- 全站底部免责声明 -->
+  <footer data-pdf-ignore="true" class="w-full border-t border-slate-200 bg-white/90 py-3 px-4 text-center text-xs text-slate-500">
+    免责声明：本系统中的所有企业情境、文档、印章、答疑及项目案例均为教学模拟虚构，仅供课堂教学与实训演示使用，与相关企业官方无任何关联，不具备任何法律效力。
+  </footer>
+
   <!-- ================= 核心逻辑脚本 ================= -->
   <script>
     /* =========================================================================
-       【外联资源配置区 EXTERNAL_ASSETS】
-       在 GitHub 仓库或本地文件夹中替换图片或 PPT 时，直接将文件放入 `./assets/` 对应目录，
-       并在此处修改外联路径即可：
-       1. `pptFile`: 若填写 `'./assets/ppt/course.pptx'`，网页会自动解析该 `.pptx` 文件，
-          将每一页的图文及内部所有的 `.gif` 动图按原 PPT 坐标自动渲染出来（100% 保留动图效果）！
-       2. `slides`: 也可直接外联幻灯片底图（`img`）与对应的动图文件（`gifs`）。
+       【资源配置区 EXTERNAL_ASSETS】
+       故事配图位于 ./assets/images/，12页新版课程PPT已直接高清预解析至 ./assets/slides/，
+       PPT内嵌的6段原版动画视频位于 ./assets/videos/ 并按原坐标自动循环叠加播放。
        ========================================================================= */
     const EXTERNAL_ASSETS = {
-      // 品牌标志外联路径（例如 './assets/logo/byd_logo.svg'）
+      // 品牌标志外联路径（留空使用默认）
       logo: '',
 
-      // 故事页配图外联路径（例如 './assets/images/p1_seagull.jpg'，留空则使用默认图）
+      // 故事页配图外联路径（留空则使用页面内置 ./assets/images/ 路径）
       images: {
         storyImgIntro1: '',
         storyImgIntro2: '',
@@ -1242,35 +1201,39 @@
         storyImgP1B: '',
         storyImgP3: '',
         storyImgP5A: '',
-        storyImgP5B: '',
         storyImgP7: ''
       },
 
-      // 外联 PPTX 文件路径（例如 './assets/ppt/course.pptx'；设置后将自动解析渲染该 PPTX 并保留所有内嵌 GIF 动图！）
-      pptFile: './assets/ppt/course.pptx',
-
-      // 20页幻灯片底图与动图外联配置（每个动图按原 PPT 坐标百分比 x, y, w, h 精准叠加）
+      // 已直接解析用户提供的 12 页 course.pptx（高清渲染底图 + 全部 6 段原版动画视频精准坐标叠加）
       slides: [
-        { num: 1,  title: '封面：《汽车机械基础》任务9 汽车常见四杆机构', img: './assets/slides/slide_01.webp', gifs: [] },
-        { num: 2,  title: '任务导学：课程目标与重难点', img: './assets/slides/slide_02.webp', gifs: [] },
-        { num: 3,  title: '目录导航：平面连杆机构与铰链四杆机构', img: './assets/slides/slide_03.webp', gifs: [] },
-        { num: 4,  title: '第一部分：平面连杆机构的特征与优缺点', img: './assets/slides/slide_04.webp', gifs: [] },
-        { num: 5,  title: '第二部分：铰链四杆机构的组成（机架、连架杆、连杆）', img: './assets/slides/slide_05.webp', gifs: [] },
-        { num: 6,  title: '基本类型①：曲柄摇杆机构（含动图）', img: './assets/slides/slide_06.webp', gifs: [{ src: './assets/gifs/slide_06_anim_1.webp', x: 60.45, y: 26.0, w: 31.58, h: 56.4 }] },
-        { num: 7,  title: '工程分析：碎石机曲柄摇杆机构', img: './assets/slides/slide_07.webp', gifs: [] },
-        { num: 8,  title: '基本类型②：双曲柄机构与平行双曲柄（含动图）', img: './assets/slides/slide_08.webp', gifs: [{ src: './assets/gifs/slide_08_anim_1.webp', x: 43.12, y: 46.02, w: 21.0, h: 23.02 }] },
-        { num: 9,  title: '反向双曲柄与汽车车门启闭机构（含动图）', img: './assets/slides/slide_09.webp', gifs: [{ src: './assets/gifs/slide_09_anim_1.webp', x: 43.12, y: 46.33, w: 21.0, h: 22.4 }] },
-        { num: 10, title: '基本类型③：双摇杆机构（含动图）', img: './assets/slides/slide_10.webp', gifs: [{ src: './assets/gifs/slide_10_anim_1.webp', x: 59.49, y: 34.0, w: 26.74, h: 33.07 }] },
-        { num: 11, title: '工程分析：自卸翻斗车双摇杆举升机构', img: './assets/slides/slide_11.webp', gifs: [] },
-        { num: 12, title: '第三部分 应用实例①：缝纫机踏板机构', img: './assets/slides/slide_12.webp', gifs: [] },
-        { num: 13, title: '应用实例②：汽车刮水器机构（含动图）', img: './assets/slides/slide_13.webp', gifs: [{ src: './assets/gifs/slide_13_anim_1.webp', x: 54.37, y: 35.46, w: 37.72, h: 36.81 }] },
-        { num: 14, title: '应用实例③：港口起重机双摇杆机构（含动图）', img: './assets/slides/slide_14.webp', gifs: [{ src: './assets/gifs/slide_14_anim_1.webp', x: 54.37, y: 32.35, w: 37.72, h: 43.03 }] },
-        { num: 15, title: '第四部分：曲柄存在条件（格拉霍夫准则 S+L≤P+Q）', img: './assets/slides/slide_15.webp', gifs: [] },
-        { num: 16, title: '铰链四杆机构三种类型的判别准则', img: './assets/slides/slide_16.webp', gifs: [] },
-        { num: 17, title: '知识拓展：四杆机构三项性能指标（ψ、γ_min、防卡死）', img: './assets/slides/slide_17.webp', gifs: [] },
-        { num: 18, title: '任务实施（一）：汽车雨刮器四杆机构分析', img: './assets/slides/slide_18.webp', gifs: [] },
-        { num: 19, title: '任务实施（二）：硬纸板与竹筷实物模型制作', img: './assets/slides/slide_19.webp', gifs: [] },
-        { num: 20, title: '课程总结：比亚迪海鸥雨刮两轮工程迭代', img: './assets/slides/slide_20.webp', gifs: [] }
+        { num: 1,  title: '封面：《汽车机械基础》模块三 汽车常用机构分析', img: './assets/slides/slide_01.webp', gifs: [], videos: [] },
+        { num: 2,  title: '概述：铰链四杆机构组成（机架、连杆、连架杆、曲柄与摇杆）', img: './assets/slides/slide_02.webp', gifs: [], videos: [] },
+        { num: 3,  title: '概述：三种铰链四杆机构运动演示（含3组同步动画）', img: './assets/slides/slide_03.webp', gifs: [], videos: [
+          { src: './assets/videos/media1.mp4', x: 0.27,  y: 14.33, w: 32.54, h: 37.92 },
+          { src: './assets/videos/media2.mp4', x: 32.81, y: 30.87, w: 33.46, h: 38.65 },
+          { src: './assets/videos/media3.mp4', x: 66.27, y: 48.49, w: 30.47, h: 42.07 }
+        ] },
+        { num: 4,  title: '铰链四杆机构的类型①：曲柄摇杆机构（含动画）', img: './assets/slides/slide_04.webp', gifs: [], videos: [
+          { src: './assets/videos/media1.mp4', x: 51.16, y: 30.60, w: 44.60, h: 51.98 }
+        ] },
+        { num: 5,  title: '曲柄摇杆机构应用：汽车前风挡雨刮器（含动画）', img: './assets/slides/slide_05.webp', gifs: [], videos: [
+          { src: './assets/videos/media4.mp4', x: 22.46, y: 32.64, w: 60.05, h: 67.36 }
+        ] },
+        { num: 6,  title: '推论：曲柄摇杆机构运动特点（等速转动转往复摆动）', img: './assets/slides/slide_06.webp', gifs: [], videos: [] },
+        { num: 7,  title: '铰链四杆机构的类型②：双曲柄机构（含动画）', img: './assets/slides/slide_07.webp', gifs: [], videos: [
+          { src: './assets/videos/media2.mp4', x: 48.36, y: 27.00, w: 49.14, h: 58.00 }
+        ] },
+        { num: 8,  title: '铰链四杆机构的类型③：双摇杆机构（含动画）', img: './assets/slides/slide_08.webp', gifs: [], videos: [
+          { src: './assets/videos/media3.mp4', x: 46.84, y: 21.44, w: 46.50, h: 64.21 }
+        ] },
+        { num: 9,  title: '双摇杆机构应用：鹤式起重机（含动画）', img: './assets/slides/slide_09.webp', gifs: [], videos: [
+          { src: './assets/videos/media5.mp4', x: 51.18, y: 34.52, w: 44.05, h: 51.09 }
+        ] },
+        { num: 10, title: '铰链四杆机构类型的判别：曲柄存在条件', img: './assets/slides/slide_10.webp', gifs: [], videos: [] },
+        { num: 11, title: '机构类型判断流程图（l_min + l_max ≤ 其余两杆之和）', img: './assets/slides/slide_11.webp', gifs: [], videos: [] },
+        { num: 12, title: '平面四杆机构的基本特性：传力特性与死点位置（含动画）', img: './assets/slides/slide_12.webp', gifs: [], videos: [
+          { src: './assets/videos/media6.mp4', x: 50.13, y: 34.49, w: 47.25, h: 48.45 }
+        ] }
       ]
     };
 
@@ -1280,12 +1243,11 @@
       let activePptSlides = EXTERNAL_ASSETS.slides.slice();
 
       const QUIZ_ANSWERS = [
-        '曲柄 a 与往复摆动的摇杆 c',
+        '曲柄与往复摆动的摇杆',
         '曲柄摇杆机构、双曲柄机构、双摇杆机构',
-        '连续整周转动转换为雨刮臂的左右往复摆动',
-        '最短杆长度 S ＋ 最长杆长度 L ≤ 其余两杆长度之和 P ＋ Q',
-        '连架杆（即电机驱动的主动曲柄 a 最短）',
-        '曲柄a越长、摇杆c越短则摆角ψ越大，且最小传动角 γ_min ≥ 40°'
+        '连续等速整周转动转换为雨刮臂的往复摆动',
+        '最长杆与最短杆长度之和 ≤ 其余两杆长度之和',
+        '连架杆（即电机驱动的主动曲柄）'
       ];
 
       const appState = {
@@ -1296,7 +1258,7 @@
         pptIndex: 0,
         pptLaserOn: false,
         pptPenOn: false,
-        quizFilled: [false, false, false, false, false, false],
+        quizFilled: [false, false, false, false, false],
         quizAutoJumpTimer: null,
         typingTimer: null,
         howeverTimer: null,
@@ -1341,36 +1303,28 @@
             '请先在下方《录用通知书》中核对受聘团队名称，在手写签字框内亲笔签名并点击“确认签字”。完成签署后即可进入岗前技能培训。'
           ],
           intro2: [
-            `欢迎【${name}】进入比亚迪工程师研修院！在正式进入实车项目组之前，所有新入职工程师必须先完成必修课——《任务9：汽车常见四杆机构》。`,
-            '本课程将系统解析铰链四杆机构的组成、三种基本类型、格拉霍夫曲柄存在条件（S + L ≤ P + Q）以及汽车刮水器的传动原理。请点击下方“开始上课”进入课件学习。'
+            `欢迎【${name}】进入比亚迪工程师研修院！在正式进入实车项目组之前，所有新入职工程师必须先完成必修课——《模块三：汽车常用机构分析》。`,
+            '本课程将系统解析铰链四杆机构的组成、三种基本类型、曲柄存在条件（最长杆与最短杆之和 ≤ 其余两杆之和）以及汽车刮水器的传动原理。请点击下方“开始上课”进入课件学习。'
           ],
           p1Part1: [
-            `凭借在岗前培训中的优异表现，【${name}】正式调入比亚迪海洋网工程研究院——“海鸥（Seagull）”纯电轿车研发项目组。`,
-            '为了给车内乘员腾出最大乘坐空间，海鸥采用了“四轮四角、极短前悬”设计。前舱集雨板下方空间极为紧凑，传统双雨刮与长横拉杆结构难以布置，项目组需要一套结构最精简的前风挡雨刮方案。'
+            `凭借在岗前小测中的优异表现，【${name}】正式调入比亚迪海洋网工程研究院——“海鸥（Seagull）”纯电轿车研发项目组。`,
+            '为了给车内乘员腾出最大乘坐空间，海鸥采用了“四轮四角、极短前悬”设计。前舱集雨板下方空间极为紧凑，传统双雨刮与长横拉杆结构难以布置，项目组需要一套结构精简、刮水高效的单雨刮方案。'
           ],
           p1Part2: [
-            `【${name}】结合刚刚学过的铰链四杆机构原理，提出了“1.0 大摆角单雨刮”方案：`,
-            '在集雨板下布置一套平面曲柄摇杆机构——电机驱动最短的【曲柄 a】作 360° 整周旋转，通过【连杆 b】直接推拉雨刮底端的铰接结点 B，带动【摇杆 c 与雨刮臂】绕固定轴 O₄ 左右往复摆动。现在，请进入实验室设定四根杆的长度数值！'
+            `【${name}】结合刚刚学过的铰链四杆机构原理，提出了“大摆角单雨刮”创新方案：`,
+            '在集雨板下沿水平方向布置一套平面曲柄摇杆机构——电机轴 O₂ 驱动最短的【曲柄 a】作 360° 整周旋转，通过【连杆 b】推拉雨刮底端的铰接结点 B，带动【摇杆 c 与雨刮臂】绕同一水平线上的固定轴 O₄ 左右往复摆动。现在，请进入实验室设定四根杆的长度数值！'
           ],
           p3Story: [
-            `【${name}】在实验室中设定的 1.0 单雨刮四杆参数已成功通过运动学仿真，曲柄旋转顺畅且摆角、传动角全部达标。`,
+            `【${name}】在实验室中设定的海鸥单雨刮四杆参数已成功通过运动学仿真，曲柄旋转顺畅且摆角、传动角全部达标。`,
             '为了在下午的立项评审会上向总工程师直观展示这套机构的动作效果，你们决定利用手头的【硬纸板、竹筷、图钉和水彩笔】，严格按照刚刚在实验室调出的四杆尺寸（按 20mm = 1cm 比例），制作一台 1:20 实体可动样机！'
           ],
-          p5Part1: [
-            `评审会上，总工程师亲自转动了【${name}】制作的 1:20 硬纸板竹筷样机，对这套紧凑巧妙的单雨刮机构给予高度评价，当场批准投入量产。`,
-            '初代比亚迪海鸥上市后迅速成为现象级爆款，连续斩获纯电轿车销量冠军。'
-          ],
-          p5Part2: [
-            '随着南方特大暴雨季到来，售后部门收到了大量车主反馈：单雨刮在暴雨中暴露出了几何局限。',
-            '一根雨刮臂绕固定轴 O₄ 摆动扫出的是【单一圆弧扇形】，而前挡风玻璃是【近矩形】的。主驾驶位左上角始终留有一块擦不到的三角盲区，视野清晰度最高只能停留在 72% 左右，达不到 85% 的暴雨安全标准。总工程师召集你们立即启动【2026款海鸥】雨刮升级攻关！'
-          ],
-          p5Part3: [
-            `【${name}】经过讨论迅速拿出了根治方案：从单雨刮升级为【主副驾同步双雨刮】！`,
-            '在原有曲柄摇杆机构的基础上，在左侧新增主驾固定轴 O₅，用一根平行同步横拉杆 BB\' 直接连接左右两根雨刮器的底端结点 B 与 B\'，构成【平行四边形双摇杆机构】，带动两根雨刮臂同步摆动覆盖左上角盲区。现在，请回到实验室重新设定双雨刮的四杆长度参数！'
+          p5ReportStory: [
+            `立项评审会正式开始！面对总工程师与海洋网底盘车身评审专家，【${name}】自信地走上汇报台，拿出你们独立设计的海鸥单雨刮四杆机构参数方案与 1:20 硬纸板竹筷可动样机。`,
+            '现在，请你们向总工程师清晰汇报：为什么单雨刮能满足海鸥紧凑前舱的布置需求？你们的四杆长度如何满足曲柄存在条件，又是如何保证雨刮大摆角、不卡死且刮水顺畅的？汇报完成后请点击下方“结束汇报”。'
           ],
           p7Story: [
-            `经过从“1.0 单雨刮探索”到“2026款 2.0 同步双雨刮重构”的两轮完整研发，【${name}】设计的平行四杆双雨刮系统圆满通过了暴雨台架测试！`,
-            '2026款比亚迪海鸥正式焕新上市，双雨刮同步摆动将主驾左上角盲区彻底扫除，视野清晰度稳定达到 93% 以上，赢得了全球车主的广泛赞誉。恭喜你们圆满完成本次研发实训！'
+            `精彩的项目汇报赢得了全场掌声！总工程师亲自摇动了【${name}】制作的 1:20 单雨刮四杆实物样机，对你们严谨的机构计算、巧妙的空间布局与出色的现场答辩给予高度评价，当场批准该单雨刮方案正式立项量产！`,
+            '经过从理论学习、岗前小测、四杆仿真设计、实物样机制作到立项汇报的完整工程历练，你们圆满完成了本次比亚迪海鸥雨刮研发实训任务！项目组特颁发《表彰奖状》，授予你们“优秀实习机械研发工程师”荣誉称号！'
           ]
         };
       }
@@ -1664,6 +1618,10 @@
         }
         if (target === 'both' || target === 'cert') {
           const certDateEl = document.getElementById('certOfficialDate');
+        const awardDateEl = document.getElementById('awardOfficialDate');
+        const awardYearEl = document.getElementById('awardDocYear');
+        if (awardDateEl) awardDateEl.textContent = cnDate;
+        if (awardYearEl) awardYearEl.textContent = String(now.getFullYear());
           if (certDateEl) certDateEl.textContent = cnDate;
           const certYearEl = document.getElementById('certDocYear');
           if (certYearEl) certYearEl.textContent = yr;
@@ -1705,6 +1663,18 @@
 
             // 剔除所有标记为 data-pdf-ignore="true" 的手写板等交互控件
             cloneEl.querySelectorAll('[data-pdf-ignore="true"]').forEach(n => n.remove());
+
+            // 岗前小测导出 PDF 时，右上角考核成绩留白横线（不打印具体数字，方便线下手写填写）
+            if (elementId === 'trainingCertPaper') {
+              const cloneScore = cloneEl.querySelector('#quizScoreDisplay');
+              if (cloneScore) {
+                cloneScore.textContent = '　　　　 分';
+                cloneScore.style.borderBottom = '1.5px solid #0F172A';
+                cloneScore.style.color = '#0F172A';
+                cloneScore.style.display = 'inline-block';
+                cloneScore.style.minWidth = '84px';
+              }
+            }
 
             stageWrapper.appendChild(cloneEl);
             document.body.appendChild(stageWrapper);
@@ -2043,9 +2013,13 @@
 
         const gifLayer = document.getElementById('pptDynamicGifLayer');
         if (gifLayer) {
-          gifLayer.innerHTML = (slide.gifs || []).map(g => `
+          const gifHtml = (slide.gifs || []).map(g => `
             <img src="${g.src}" alt="机构动图" style="position:absolute; left:${g.x}%; top:${g.y}%; width:${g.w}%; height:${g.h}%; object-fit:contain; border-radius:6px;" />
           `).join('');
+          const videoHtml = (slide.videos || []).map(v => `
+            <video src="${v.src}" autoplay loop muted playsinline style="position:absolute; left:${v.x}%; top:${v.y}%; width:${v.w}%; height:${v.h}%; object-fit:cover; border-radius:4px; background:#fff; pointer-events:none;"></video>
+          `).join('');
+          gifLayer.innerHTML = gifHtml + videoHtml;
         }
 
         const selectEl = document.getElementById('pptJumpSelect');
@@ -2096,10 +2070,10 @@
          ===================================================================== */
       function updateQuizUI() {
         const count = appState.quizFilled.filter(Boolean).length;
-        const score = count === 6 ? 100 : count * 16 + (count > 2 ? count - 2 : 0);
+        const score = count * 20;
         const scoreEl = document.getElementById('quizScoreDisplay');
         if (scoreEl) {
-          scoreEl.textContent = count === 6 ? '100 分（合格）' : `${score} 分`;
+          scoreEl.textContent = count === 5 ? '100 分（通过）' : `${score} 分`;
         }
 
         document.querySelectorAll('.quiz-slot').forEach((slot, idx) => {
@@ -2117,7 +2091,7 @@
 
         const banner = document.getElementById('quizFullScoreBanner');
         const stamp = document.getElementById('certOfficialStamp');
-        if (count === 6 && banner) {
+        if (count === 5 && banner) {
           refreshOfficialDates('cert');
           if (stamp) stamp.classList.remove('hidden');
           if (banner.classList.contains('hidden')) {
@@ -2125,12 +2099,6 @@
             playSoundEffect('fanfare');
             launchConfetti(2400);
             autoScrollToElement(banner, true);
-            if (appState.quizAutoJumpTimer) clearTimeout(appState.quizAutoJumpTimer);
-            appState.quizAutoJumpTimer = setTimeout(() => {
-              if (appState.currentPage === 4) {
-                goToPage(5, false);
-              }
-            }, 2400);
           }
         } else {
           if (banner) banner.classList.add('hidden');
@@ -2187,7 +2155,7 @@
       function initIntroPage4(reset = false) {
         syncEngineerNameEverywhere(appState.engineerName);
         if (reset) {
-          appState.quizFilled = [false, false, false, false, false, false];
+          appState.quizFilled = [false, false, false, false, false];
         }
         updateQuizUI();
       }
@@ -2285,68 +2253,43 @@
       }
 
       function initPage5() {
-        p5Phase = 1;
-        const box1 = document.getElementById('p5TextBox1');
-        const howeverWrap = document.getElementById('p5HoweverWrap');
-        const box2 = document.getElementById('p5TextBox2');
-        const btnDiscuss = document.getElementById('p5BtnDiscussWrap');
-        const box3 = document.getElementById('p5TextBox3');
-        const btnWork = document.getElementById('p5BtnWorkWrap');
-
-        howeverWrap.classList.add('hidden');
-        box2.innerHTML = '';
-        btnDiscuss.classList.add('hidden');
-        box3.classList.add('hidden');
-        box3.innerHTML = '';
-        btnWork.classList.add('hidden');
-
-        playParagraphs(box1, getStoryTexts().p5Part1, () => {
-          appState.howeverTimer = setTimeout(() => {
-            p5Phase = 2;
-            howeverWrap.classList.remove('hidden');
-            autoScrollToElement(howeverWrap, true);
-            playParagraphs(box2, getStoryTexts().p5Part2, () => {
-              btnDiscuss.classList.remove('hidden');
-              autoScrollToElement(btnDiscuss, true);
-            });
-          }, 2000);
-        });
-      }
-
-      function initPage6(resetParams = false) {
-        if (resetParams) {
-          Object.assign(appState.p6, appState.p6.init, {
-            theta2: 0.7,
-            manual: false,
-            stalled: false,
-            clarity: 58
-          });
+        const s = appState.p2;
+        const badge = document.getElementById('p5ReportParamsBadge');
+        if (badge) {
+          badge.textContent = `a=${s.a}mm(${(s.a / 20).toFixed(1)}cm) · b=${s.b}mm(${(s.b / 20).toFixed(1)}cm) · c=${s.c}mm(${(s.c / 20).toFixed(1)}cm) · d=${s.d}mm(${(s.d / 20).toFixed(1)}cm)`;
         }
-        syncLabSliders('p6');
-        requestAnimationFrame(() => {
-          resizeLabCanvas('canvasP6', 'p6');
-          updateLabUI('p6');
+        const box1 = document.getElementById('p5TextBox1');
+        const reportPanel = document.getElementById('p5ReportingPanel');
+        if (reportPanel) reportPanel.classList.add('hidden');
+
+        playParagraphs(box1, getStoryTexts().p5ReportStory, () => {
+          if (reportPanel) {
+            reportPanel.classList.remove('hidden');
+            autoScrollToElement(reportPanel, true);
+          }
         });
       }
 
       function initPage7() {
         syncEngineerNameEverywhere(appState.engineerName);
+        refreshOfficialDates('both');
         const s2 = appState.p2;
-        const s6 = appState.p6;
-        document.getElementById('p7SummaryP2').textContent =
-          `a=${s2.a}mm(${(s2.a / 20).toFixed(1)}cm) · b=${s2.b}mm · c=${s2.c}mm · d=${s2.d}mm`;
-        document.getElementById('p7SummaryP6').textContent =
-          `a=${s6.a}mm(${(s6.a / 20).toFixed(1)}cm) · b=${s6.b}mm · c=${s6.c}mm · d=${s6.d}mm`;
+        const sumEl = document.getElementById('p7SummaryP2');
+        if (sumEl) {
+          sumEl.textContent = `a=${s2.a}mm(${(s2.a / 20).toFixed(1)}cm) · b=${s2.b}mm(${(s2.b / 20).toFixed(1)}cm) · c=${s2.c}mm(${(s2.c / 20).toFixed(1)}cm) · d=${s2.d}mm(${(s2.d / 20).toFixed(1)}cm)`;
+        }
 
         const box = document.getElementById('p7TextBox');
         const cert = document.getElementById('p7CertCard');
-        cert.classList.add('hidden');
+        if (cert) cert.classList.add('hidden');
 
         playParagraphs(box, getStoryTexts().p7Story, () => {
-          cert.classList.remove('hidden');
-          playSoundEffect('fanfare');
-          launchConfetti(2200);
-          autoScrollToElement(cert, true);
+          if (cert) {
+            cert.classList.remove('hidden');
+            playSoundEffect('fanfare');
+            launchConfetti(2200);
+            autoScrollToElement(cert, true);
+          }
         });
       }
 
@@ -2360,12 +2303,10 @@
         'page-3',
         'page-4',
         'page-5',
-        'page-6',
         'page-7'
       ];
 
       function goToPage(pageNum, resetTarget = false) {
-        // 如果当前在 Page 1 且尚未完成签字确认，阻止跳往后续页面并提示先完成签字
         if (pageNum > 1 && appState.currentPage === 1 && !appState.offerSigned) {
           const errTip = document.getElementById('signErrorTip');
           if (errTip) {
@@ -2377,7 +2318,7 @@
         }
 
         clearTimers();
-        appState.currentPage = clamp(pageNum, 1, 11);
+        appState.currentPage = clamp(pageNum, 1, 10);
 
         const targetId = PAGE_SECTION_IDS[appState.currentPage - 1];
         document.querySelectorAll('.page-view').forEach(sec => {
@@ -2403,8 +2344,7 @@
           case 7: initPage3(); break;
           case 8: initPage4(); break;
           case 9: initPage5(); break;
-          case 10: initPage6(resetTarget); break;
-          case 11: initPage7(); break;
+          case 10: initPage7(); break;
         }
       }
 
@@ -2692,30 +2632,30 @@
         if (kin.isCrankRocker && kin.extremePhi1 !== null && kin.extremePhi2 !== null) {
           midLocalTheta4 = (kin.extremePhi1 + kin.extremePhi2) * 0.5;
         }
-        const targetCenterAngle = isDual ? degToRad(86) : degToRad(90);
-        const frameTiltRad = targetCenterAngle - midLocalTheta4;
+        const targetCenterAngle = degToRad(90);
+        // 单雨刮电机轴 O2 与雨刮固定轴 O4 始终置于同一水平直线上（frameTiltRad = 0）
+        // 仅在雨刮臂与摇杆轴安装花键处施加固定偏置角，保证雨刮对称居中扫掠风挡
+        const bladeMountOffset = targetCenterAngle - midLocalTheta4;
+        const frameTiltRad = 0;
 
         const pO4 = { x: m.pivotX, y: m.pivotY };
         const toC = pt => {
           const rx = pt.x - st.d;
           const ry = pt.y;
-          const rotX = rx * Math.cos(frameTiltRad) - ry * Math.sin(frameTiltRad);
-          const rotY = rx * Math.sin(frameTiltRad) + ry * Math.cos(frameTiltRad);
           return {
-            x: pO4.x + rotX * m.scale,
-            y: pO4.y - rotY * m.scale
+            x: pO4.x + rx * m.scale,
+            y: pO4.y - ry * m.scale
           };
         };
 
         const pO2 = toC(sol.O2);
         const pA = toC(sol.A);
         const pB = sol.B ? toC(sol.B) : null;
-        const pO5 = isDual ? { x: m.o5X, y: m.pivotY } : null;
-        const pB2 = (isDual && pB && pO5)
-          ? { x: pB.x + (pO5.x - pO4.x), y: pB.y + (pO5.y - pO4.y) }
-          : null;
+        const pO5 = null;
+        const pB2 = null;
 
-        const wiperAngle = pB ? Math.atan2(pO4.y - pB.y, pB.x - pO4.x) : targetCenterAngle;
+        const rawRockerAngle = pB ? Math.atan2(pO4.y - pB.y, pB.x - pO4.x) : midLocalTheta4;
+        const wiperAngle = rawRockerAngle + bladeMountOffset;
         let halfPsi = degToRad(34);
         if (kin.isCrankRocker && kin.psi !== null) {
           halfPsi = degToRad(kin.psi * 0.5);
@@ -3020,9 +2960,7 @@
             }
           });
         }
-        if (EXTERNAL_ASSETS.pptFile) {
-          loadAndRenderExternalPptx(EXTERNAL_ASSETS.pptFile);
-        }
+        // PPT 已直接预解析为高清底图与原版动画视频，无需浏览器端外联解析
       }
 
       function bindLabEvents(canvasId, key) {
@@ -3072,7 +3010,7 @@
           exportCleanDocumentPdf('offerCardWrap', '比亚迪实习工程师录用通知书', evt.currentTarget);
         });
         document.getElementById('btnExportCertPdf').addEventListener('click', evt => {
-          exportCleanDocumentPdf('trainingCertPaper', '比亚迪新员工岗前技能培训合格证书', evt.currentTarget);
+          exportCleanDocumentPdf('trainingCertPaper', '比亚迪新员工岗前技能小测', evt.currentTarget);
         });
 
         document.getElementById('btnResetCurrentPage').addEventListener('click', () => {
@@ -3081,8 +3019,8 @@
 
         document.getElementById('btnResetAllPages').addEventListener('click', () => {
           Object.assign(appState.p2, appState.p2.init, { theta2: 0.7, manual: false });
-          Object.assign(appState.p6, appState.p6.init, { theta2: 0.7, manual: false });
-          appState.quizFilled = [false, false, false, false, false, false];
+          
+          appState.quizFilled = [false, false, false, false, false];
           appState.offerSigned = false;
           appState.hasSignatureInk = false;
           appState.pptIndex = 0;
@@ -3388,67 +3326,40 @@
           goToPage(9, false);
         });
 
-        // ================= Page 9 事件 =================
+        // ================= Page 9 (项目汇报) 事件 =================
         document.getElementById('btnSkipP5').addEventListener('click', () => {
-          if (p5Phase === 1 || p5Phase === 2) {
-            clearTimers();
-            instantFillParagraphs(document.getElementById('p5TextBox1'), getStoryTexts().p5Part1);
-            document.getElementById('p5HoweverWrap').classList.remove('hidden');
-            instantFillParagraphs(document.getElementById('p5TextBox2'), getStoryTexts().p5Part2, () => {
-              const btn = document.getElementById('p5BtnDiscussWrap');
-              btn.classList.remove('hidden');
-              autoScrollToElement(btn, true);
-            });
-            p5Phase = 2;
-          } else {
-            instantFillParagraphs(document.getElementById('p5TextBox3'), getStoryTexts().p5Part3, () => {
-              const btn = document.getElementById('p5BtnWorkWrap');
-              btn.classList.remove('hidden');
-              autoScrollToElement(btn, true);
-            });
-          }
-        });
-
-        document.getElementById('btnP5Discuss').addEventListener('click', () => {
-          p5Phase = 3;
-          document.getElementById('p5BtnDiscussWrap').classList.add('hidden');
-          playParagraphs(document.getElementById('p5TextBox3'), getStoryTexts().p5Part3, () => {
-            const btn = document.getElementById('p5BtnWorkWrap');
-            btn.classList.remove('hidden');
-            autoScrollToElement(btn, true);
+          instantFillParagraphs(document.getElementById('p5TextBox1'), getStoryTexts().p5ReportStory, () => {
+            const panel = document.getElementById('p5ReportingPanel');
+            if (panel) {
+              panel.classList.remove('hidden');
+              autoScrollToElement(panel, true);
+            }
           });
         });
 
-        document.getElementById('btnP5ToPage6').addEventListener('click', () => {
+        document.getElementById('btnP5FinishReport').addEventListener('click', () => {
           goToPage(10, false);
         });
 
-        // ================= Page 10 (2.0 双雨刮) 事件 =================
-        bindLabEvents('canvasP6', 'p6');
-        document.getElementById('btnP6Manual').addEventListener('click', () => {
-          appState.p6.manual = !appState.p6.manual;
-        });
-        document.getElementById('btnP6QuickDemo').addEventListener('click', () => {
-          Object.assign(appState.p6, appState.p6.std);
-          syncLabSliders('p6');
-          updateLabUI('p6');
-        });
-        document.getElementById('btnP6Finish').addEventListener('click', () => {
-          goToPage(11, false);
-        });
-
-        // ================= Page 11 事件 =================
+        // ================= Page 10 (项目结题与表彰奖状) 事件 =================
         document.getElementById('btnSkipP7').addEventListener('click', () => {
           instantFillParagraphs(document.getElementById('p7TextBox'), getStoryTexts().p7Story, () => {
             const cert = document.getElementById('p7CertCard');
-            cert.classList.remove('hidden');
-            autoScrollToElement(cert, true);
+            if (cert) {
+              cert.classList.remove('hidden');
+              autoScrollToElement(cert, true);
+            }
           });
         });
+
+        document.getElementById('btnExportAwardPdf').addEventListener('click', evt => {
+          exportCleanDocumentPdf('awardCertPaper', '海鸥项目组优秀实习工程师表彰奖状', evt.currentTarget);
+        });
+
         document.getElementById('btnP7Restart').addEventListener('click', () => {
           Object.assign(appState.p2, appState.p2.init, { theta2: 0.7, manual: false });
-          Object.assign(appState.p6, appState.p6.init, { theta2: 0.7, manual: false });
-          appState.quizFilled = [false, false, false, false, false, false];
+          
+          appState.quizFilled = [false, false, false, false, false];
           appState.offerSigned = false;
           appState.hasSignatureInk = false;
           appState.pptIndex = 0;
@@ -3458,7 +3369,7 @@
         window.addEventListener('resize', () => {
           if (appState.currentPage === 1 && !appState.offerSigned) initSignaturePad();
           if (appState.currentPage === 6) resizeLabCanvas('canvasP2', 'p2');
-          if (appState.currentPage === 10) resizeLabCanvas('canvasP6', 'p6');
+          
         });
       }
 
@@ -3470,8 +3381,6 @@
 
         if (appState.currentPage === 6) {
           stepAndDrawLab('canvasP2', 'p2', dt);
-        } else if (appState.currentPage === 10) {
-          stepAndDrawLab('canvasP6', 'p6', dt);
         }
         requestAnimationFrame(loop);
       }
