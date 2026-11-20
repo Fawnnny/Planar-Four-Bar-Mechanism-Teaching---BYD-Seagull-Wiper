@@ -5,12 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>海鸥雨刮器平面四杆机构实训系统</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@600;700;900&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';document.head.appendChild(s);"></script>
+  <script defer src="https://cdn.bootcdn.net/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';document.head.appendChild(s);"></script>
   <style>
     :root {
       --byd-red: #C5001A;
@@ -183,6 +179,33 @@
       padding: 56px !important;
       margin: 0 !important;
       box-sizing: border-box !important;
+      -webkit-text-size-adjust: 100% !important;
+      text-size-adjust: 100% !important;
+      font-kerning: none !important;
+      font-variant-ligatures: none !important;
+      text-rendering: geometricPrecision !important;
+    }
+    /* 修复手机端 html2canvas 导出 PDF 时中文字距被异常拉宽的问题 */
+    .pdf-desktop-layout * {
+      -webkit-text-size-adjust: 100% !important;
+      text-size-adjust: 100% !important;
+      font-kerning: none !important;
+      word-spacing: normal !important;
+    }
+    .pdf-desktop-layout .pdf-body-text,
+    .pdf-desktop-layout .pdf-cert-quiz-box,
+    .pdf-desktop-layout .pdf-table,
+    .pdf-desktop-layout .pdf-header-meta,
+    .pdf-desktop-layout p,
+    .pdf-desktop-layout td,
+    .pdf-desktop-layout span {
+      letter-spacing: 0px !important;
+    }
+    .pdf-desktop-layout .pdf-red-title {
+      letter-spacing: 4px !important;
+    }
+    .pdf-desktop-layout .pdf-doc-subtitle {
+      letter-spacing: 3px !important;
     }
     .pdf-desktop-layout .pdf-header-meta {
       font-size: 14px !important;
@@ -329,7 +352,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div id="intro1StoryBox" class="lg:col-span-7 text-[20px] sm:text-[22px] text-slate-800 leading-relaxed space-y-3 min-h-[140px] bg-slate-50 p-5 rounded-xl border border-slate-200"></div>
           <div class="lg:col-span-5 bg-slate-900 rounded-xl overflow-hidden border border-slate-200">
-            <img id="storyImgIntro1" src="https://upload.wikimedia.org/wikipedia/commons/9/98/2023_BYD_Seagull_%28front%29.jpg" data-fallback="./assets/images/story_intro1_fallback.webp" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}" alt="比亚迪海鸥" class="w-full h-52 object-cover" />
+            <img id="storyImgIntro1" src="./assets/images/story_intro1_fallback.webp" alt="比亚迪海鸥" class="w-full h-52 object-cover" />
           </div>
         </div>
 
@@ -725,10 +748,10 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-200">
-            <img id="storyImgP1A" src="https://upload.wikimedia.org/wikipedia/commons/9/98/2023_BYD_Seagull_%28front%29.jpg" data-fallback="./assets/images/story_p1a_fallback.webp" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}" alt="比亚迪海鸥前视图" class="w-full h-52 object-cover" />
+            <img id="storyImgP1A" src="./assets/images/story_p1a_fallback.webp" loading="lazy" alt="比亚迪海鸥前视图" class="w-full h-52 object-cover" />
           </div>
           <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-200">
-            <img id="storyImgP1B" src="https://upload.wikimedia.org/wikipedia/commons/c/ca/BYD_Seagull_007.jpg" data-fallback="./assets/images/story_p1b_fallback.webp" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}" alt="比亚迪海鸥单雨刮布置" class="w-full h-52 object-cover" />
+            <img id="storyImgP1B" src="./assets/images/story_p1b_fallback.webp" loading="lazy" alt="比亚迪海鸥单雨刮布置" class="w-full h-52 object-cover" />
           </div>
         </div>
 
@@ -1031,7 +1054,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div id="p5TextBox1" class="lg:col-span-8 text-[20px] sm:text-[22px] text-slate-800 leading-relaxed space-y-4 min-h-[200px] bg-slate-50 p-6 rounded-xl border border-slate-200"></div>
           <div class="lg:col-span-4 bg-slate-900 rounded-xl overflow-hidden border border-slate-200">
-            <img id="storyImgP5A" src="https://upload.wikimedia.org/wikipedia/commons/9/98/2023_BYD_Seagull_%28front%29.jpg" data-fallback="./assets/images/story_p5a_fallback.webp" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}" alt="比亚迪海鸥雨刮方案汇报" class="w-full h-56 object-cover" />
+            <img id="storyImgP5A" src="./assets/images/story_p5a_fallback.webp" loading="lazy" alt="比亚迪海鸥雨刮方案汇报" class="w-full h-56 object-cover" />
           </div>
         </div>
 
@@ -1076,7 +1099,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
           <div id="p7TextBox" class="lg:col-span-7 text-[20px] sm:text-[22px] text-slate-800 leading-relaxed space-y-4 min-h-[190px] bg-slate-50 p-6 rounded-xl border border-slate-200"></div>
           <div class="lg:col-span-5 bg-slate-900 rounded-xl overflow-hidden border border-slate-200">
-            <img id="storyImgP7" src="https://upload.wikimedia.org/wikipedia/commons/e/e6/BYD_Seagull_facelift_001.jpg" data-fallback="./assets/images/story_p7_fallback.webp" onerror="if(this.dataset.fallback && this.src!==this.dataset.fallback){this.src=this.dataset.fallback;}" alt="比亚迪海鸥项目结题" class="w-full h-56 object-cover" />
+            <img id="storyImgP7" src="./assets/images/story_p7_fallback.webp" loading="lazy" alt="比亚迪海鸥项目结题" class="w-full h-56 object-cover" />
           </div>
         </div>
       </div>
@@ -1643,7 +1666,7 @@
             // 创建 920px 桌面宽度隐藏容器（置顶于坐标 (0,0) 避免移动端负坐标裁切，克隆渲染时恢复 100% 不透明度）
             stageWrapper = document.createElement('div');
             stageWrapper.id = 'pdfDesktopCloneStage';
-            stageWrapper.style.cssText = 'position:fixed; left:0; top:0; width:920px; z-index:-9999; opacity:0.001; background:#FFFEFA; pointer-events:none;';
+            stageWrapper.style.cssText = 'position:absolute; left:0; top:0; width:920px; z-index:-9999; opacity:0.001; background:#FFFEFA; pointer-events:none; -webkit-text-size-adjust:100%; text-size-adjust:100%;';
             const cloneEl = el.cloneNode(true);
             cloneEl.id = elementId + '_pdfClone';
             cloneEl.classList.add('pdf-desktop-layout');
@@ -1679,10 +1702,12 @@
             stageWrapper.appendChild(cloneEl);
             document.body.appendChild(stageWrapper);
 
+            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
             const canvas = await window.html2canvas(cloneEl, {
               scale: 2,
               useCORS: true,
-              windowWidth: 1200,
+              letterRendering: false,
+              windowWidth: 920,
               width: 920,
               x: 0,
               y: 0,
@@ -2048,7 +2073,7 @@
           thumbGrid.innerHTML = activePptSlides.map((s, idx) => `
             <button type="button" data-ppt-idx="${idx}" class="ppt-thumb-btn bg-white rounded-lg overflow-hidden border border-slate-300 hover:border-[#C5001A] transition text-left">
               <div class="aspect-[16/9] bg-slate-900 relative">
-                <img src="${s.img}" alt="P${s.num}" class="w-full h-full object-cover" />
+                <img src="${s.img}" loading="lazy" alt="P${s.num}" class="w-full h-full object-cover" />
                 <span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-slate-900/80 text-white text-[10px] font-mono-num font-bold">
                   ${String(s.num).padStart(2, '0')}
                 </span>
