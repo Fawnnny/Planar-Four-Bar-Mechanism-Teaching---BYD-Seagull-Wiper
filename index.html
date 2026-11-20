@@ -546,13 +546,20 @@
     .pdf-desktop-layout,
     .pdf-desktop-layout * {
       font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Helvetica Neue", Arial, sans-serif !important;
-      -webkit-text-size-adjust: 100% !important;
-      text-size-adjust: 100% !important;
+      -webkit-text-size-adjust: none !important;
+      text-size-adjust: none !important;
+      max-height: 999999px !important;
       font-kerning: none !important;
       font-variant-ligatures: none !important;
       letter-spacing: 0px !important;
       word-spacing: 0px !important;
       text-indent: 0px !important;
+    }
+    .pdf-desktop-layout {
+      background-image: none !important;
+      background-color: #FFFEFA !important;
+      font-size: 18px !important;
+      line-height: 1.65 !important;
     }
     .pdf-desktop-layout .pdf-red-title {
       letter-spacing: 2px !important;
@@ -2100,12 +2107,48 @@
             stageWrapper.appendChild(cloneEl);
             document.body.appendChild(stageWrapper);
 
+            // 预栅格化克隆文档内的 SVG 印章为高清 PNG（彻底避免手机端 html2canvas 解析 <textPath>/<filter> 产生乱码或重影）
+            const svgList = Array.from(cloneEl.querySelectorAll('svg'));
+            for (const svgEl of svgList) {
+              try {
+                const rect = svgEl.getBoundingClientRect();
+                const w = Math.max(140, Math.round(rect.width || 160));
+                const h = Math.max(140, Math.round(rect.height || 160));
+                const svgClone = svgEl.cloneNode(true);
+                svgClone.setAttribute('width', String(w * 2));
+                svgClone.setAttribute('height', String(h * 2));
+                // 移除在部分安卓 WebView 中导致异常的 SVG 颗粒滤镜，保留清晰半圆印章
+                svgClone.querySelectorAll('filter').forEach(f => f.remove());
+                svgClone.querySelectorAll('[filter]').forEach(n => n.removeAttribute('filter'));
+                const xml = new XMLSerializer().serializeToString(svgClone);
+                const svgUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+                const pngUrl = await new Promise((resolve, reject) => {
+                  const im = new Image();
+                  im.onload = () => {
+                    const c = document.createElement('canvas');
+                    c.width = w * 2;
+                    c.height = h * 2;
+                    const cctx = c.getContext('2d');
+                    cctx.drawImage(im, 0, 0, w * 2, h * 2);
+                    resolve(c.toDataURL('image/png'));
+                  };
+                  im.onerror = reject;
+                  im.src = svgUrl;
+                });
+                const imgRep = document.createElement('img');
+                imgRep.src = pngUrl;
+                imgRep.style.cssText = `width:${w}px; height:${h}px; display:block;`;
+                svgEl.parentNode.replaceChild(imgRep, svgEl);
+              } catch (e) {}
+            }
+
             await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
             const canvas = await window.html2canvas(cloneEl, {
               scale: 2,
               useCORS: true,
               letterRendering: false,
               windowWidth: 920,
+              windowHeight: Math.max(1200, cloneEl.scrollHeight + 120),
               width: 920,
               x: 0,
               y: 0,
@@ -2120,6 +2163,25 @@
                 }
               }
             });
+
+            // 直接在导出的高清画布上叠加清晰斜向教学水印（不依赖 CSS SVG 背景，全机型零乱码）
+            try {
+              const wctx = canvas.getContext('2d');
+              wctx.save();
+              wctx.fillStyle = 'rgba(200, 22, 29, 0.065)';
+              wctx.font = 'bold 28px "PingFang SC", "Microsoft YaHei", sans-serif';
+              for (let wy = 120; wy < canvas.height + 200; wy += 340) {
+                for (let wx = -80; wx < canvas.width + 200; wx += 480) {
+                  wctx.save();
+                  wctx.translate(wx, wy);
+                  wctx.rotate(-0.42);
+                  wctx.fillText('教学专用 · 仅供课堂演示', 0, 0);
+                  wctx.restore();
+                }
+              }
+              wctx.restore();
+            } catch (e) {}
+
             const imgData = canvas.toDataURL('image/jpeg', 0.96);
             const pdf = new window.jspdf.jsPDF({
               orientation: canvas.width > canvas.height ? 'l' : 'p',
