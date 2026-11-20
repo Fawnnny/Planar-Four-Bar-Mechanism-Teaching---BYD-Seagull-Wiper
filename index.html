@@ -534,38 +534,41 @@
       padding: 56px !important;
       margin: 0 !important;
       box-sizing: border-box !important;
-      -webkit-text-size-adjust: 100% !important;
-      text-size-adjust: 100% !important;
-      font-kerning: none !important;
-      font-variant-ligatures: none !important;
-      text-rendering: geometricPrecision !important;
-    }
-    /* 修复手机端 html2canvas 导出 PDF 时中文字体错乱/拉宽的根因：
-       安卓手机无本地宋体系字体，html2canvas 用 serif 测量字宽会产生严重偏移；
-       导出克隆层统一锁定系统无衬线中文字体 + 关闭字距与首行缩进 bug */
-    .pdf-desktop-layout,
-    .pdf-desktop-layout * {
-      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Helvetica Neue", Arial, sans-serif !important;
-      -webkit-text-size-adjust: none !important;
-      text-size-adjust: none !important;
-      max-height: 999999px !important;
-      font-kerning: none !important;
-      font-variant-ligatures: none !important;
-      letter-spacing: 0px !important;
-      word-spacing: 0px !important;
-      text-indent: 0px !important;
-    }
-    .pdf-desktop-layout {
       background-image: none !important;
       background-color: #FFFEFA !important;
       font-size: 18px !important;
-      line-height: 1.65 !important;
+      line-height: 1.7 !important;
+    }
+    .pdf-desktop-layout,
+    .pdf-desktop-layout * {
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif !important;
+      -webkit-text-size-adjust: none !important;
+      text-size-adjust: none !important;
+      max-height: 999999px !important;
+      letter-spacing: normal !important;
+      word-spacing: normal !important;
+      text-indent: 0px !important;
     }
     .pdf-desktop-layout .pdf-red-title {
-      letter-spacing: 2px !important;
+      letter-spacing: 3px !important;
+      line-height: 1.3 !important;
     }
     .pdf-desktop-layout .pdf-doc-subtitle {
-      letter-spacing: 1px !important;
+      letter-spacing: 2px !important;
+      line-height: 1.35 !important;
+    }
+    .pdf-desktop-layout h2 {
+      line-height: 1.35 !important;
+      margin-bottom: 14px !important;
+    }
+    /* 修复 html2canvas 中 inline 元素下划线穿过文字中部的 bug */
+    .pdf-desktop-layout #certEngineerName,
+    .pdf-desktop-layout #p7CertEngineerName,
+    .pdf-desktop-layout .pdf-inline-name {
+      display: inline-block !important;
+      line-height: 1.25 !important;
+      padding-bottom: 4px !important;
+      vertical-align: baseline !important;
     }
     .pdf-desktop-layout .pdf-header-meta {
       font-size: 14px !important;
@@ -2060,7 +2063,7 @@
             // 创建 920px 桌面宽度隐藏容器（置顶于坐标 (0,0) 避免移动端负坐标裁切，克隆渲染时恢复 100% 不透明度）
             stageWrapper = document.createElement('div');
             stageWrapper.id = 'pdfDesktopCloneStage';
-            stageWrapper.style.cssText = 'position:absolute; left:0; top:0; width:920px; z-index:-9999; opacity:0.001; background:#FFFEFA; pointer-events:none; -webkit-text-size-adjust:100%; text-size-adjust:100%;';
+            stageWrapper.style.cssText = 'position:fixed; left:-10000px; top:0; width:920px; z-index:-9999; opacity:1; background:#FFFEFA; pointer-events:none;';
             const cloneEl = el.cloneNode(true);
             cloneEl.id = elementId + '_pdfClone';
             cloneEl.classList.add('pdf-desktop-layout');
@@ -2071,7 +2074,7 @@
             liveInputs.forEach((inp, idx) => {
               if (cloneInputs[idx]) {
                 const span = document.createElement('span');
-                span.className = cloneInputs[idx].className;
+                span.className = cloneInputs[idx].className + ' pdf-inline-name';
                 span.style.display = 'inline-block';
                 span.textContent = inp.value || appState.engineerName || '';
                 cloneInputs[idx].parentNode.replaceChild(span, cloneInputs[idx]);
@@ -2111,9 +2114,8 @@
             const svgList = Array.from(cloneEl.querySelectorAll('svg'));
             for (const svgEl of svgList) {
               try {
-                const rect = svgEl.getBoundingClientRect();
-                const w = Math.max(140, Math.round(rect.width || 160));
-                const h = Math.max(140, Math.round(rect.height || 160));
+                const w = 152;
+                const h = 152;
                 const svgClone = svgEl.cloneNode(true);
                 svgClone.setAttribute('width', String(w * 2));
                 svgClone.setAttribute('height', String(h * 2));
@@ -2137,7 +2139,7 @@
                 });
                 const imgRep = document.createElement('img');
                 imgRep.src = pngUrl;
-                imgRep.style.cssText = `width:${w}px; height:${h}px; display:block;`;
+                imgRep.width = w; imgRep.height = h; imgRep.style.cssText = `width:${w}px !important; height:${h}px !important; max-width:${w}px !important; min-width:${w}px !important; display:block;`;
                 svgEl.parentNode.replaceChild(imgRep, svgEl);
               } catch (e) {}
             }
@@ -2158,6 +2160,7 @@
               onclone: clonedDoc => {
                 const clonedStage = clonedDoc.getElementById('pdfDesktopCloneStage');
                 if (clonedStage) {
+                  clonedStage.style.left = '0px';
                   clonedStage.style.opacity = '1';
                   clonedStage.style.zIndex = '99999';
                 }
